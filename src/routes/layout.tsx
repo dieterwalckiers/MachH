@@ -1,4 +1,4 @@
-import { component$, Slot } from "@builder.io/qwik";
+import { component$, createContextId, Slot, useContextProvider, useStore } from "@builder.io/qwik";
 import type { RequestHandler } from "@builder.io/qwik-city";
 import MainMenu from "~/components/MainMenu/mainmenu";
 import Header from "~/components/header/header";
@@ -14,7 +14,19 @@ export const onGet: RequestHandler = async ({ cacheControl }) => {
     });
 };
 
+export type MainContextData = {
+    showMobileMenu: boolean;
+};
+export const MainContext = createContextId<MainContextData>("mainContext");
+
+
 export default component$(() => {
+
+    const store = useStore<MainContextData>({
+        showMobileMenu: false,
+    });
+    useContextProvider(MainContext, store);
+
     return (
         <div class="w-full flex flex-col py-4 items-center font-roboto">
             <div class="w-[calc(100vw-1rem)] md:w-[50rem] flex flex-col items-center">

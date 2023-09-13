@@ -1,14 +1,17 @@
-import { $, component$, useSignal } from '@builder.io/qwik';
+import { component$, useContext } from '@builder.io/qwik';
 import { useLocation, useContent, Link } from '@builder.io/qwik-city';
 import stamp from '/logo_mach_h_def_stamp.png'
-import useOutsideClick from '~/util/useOutsideClick';
-
+import useCloseOnOutsideClick from '~/util/useCloseOnOutsideClick';
+import { MainContext } from '~/routes/layout';
 
 const MainMenu = component$(() => {
     const { menu } = useContent();
     const { url } = useLocation();
-    const showMenu = useSignal(0);
-    const ref = useOutsideClick($(() => { showMenu.value = 0 })); // pick back up: accessing showMenu here gives errors (simple console.log works a-ok)
+
+    const mainCtx = useContext(MainContext);
+
+    const ref = useCloseOnOutsideClick();
+    // TODO: PUT IN A REPO
 
     return (
         <div class="w-full flex items-center justify-between border-machh-primary border-b-[3px] pb-6">
@@ -21,10 +24,10 @@ const MainMenu = component$(() => {
                 <button
                     type="button"
                     class="block md:hidden text-gray-500 hover:text-white focus:text-white focus:outline-none"
-                    onClick$={() => (showMenu.value = 1)}
+                    onClick$={() => (mainCtx.showMobileMenu = !mainCtx.showMobileMenu)}
                 >
                     <svg class="h-8 w-8 fill-machh-primary" viewBox="0 0 24 24">
-                        {showMenu.value === 1 ? (
+                        {mainCtx.showMobileMenu ? (
                             <path
                                 fill-rule="evenodd"
                                 clip-rule="evenodd"
@@ -41,7 +44,7 @@ const MainMenu = component$(() => {
                 </button>
                 <nav
                     ref={ref}
-                    class={`${showMenu.value === 1 ? 'block' : 'hidden'}
+                    class={`${mainCtx.showMobileMenu ? 'block' : 'hidden'}
                     text-machh-primary lowercase text-xl font-semibold
                     flex flex-col
                     absolute top-0 right-0
@@ -61,7 +64,7 @@ const MainMenu = component$(() => {
                                     class={`mt-2 ml-4 mr-4 md:mt-0 md:mr-0 md:ml-12 ${url.pathname === item.href ? "underline underline-offset-8" : ""}`}
                                     key={item.href}
                                 >
-                                    <Link href={item.href}>
+                                    <Link href={item.href} onClick$={() => mainCtx.showMobileMenu = false}>
                                         {item.text}
                                     </Link>
                                 </h5>
