@@ -1,6 +1,11 @@
 export interface Event {
     title: string,
-    date: Date,
+    date: string,
+    time?: string;
+    place?: string;
+    price?: string;
+    slug: string;
+    linkedProjects?: Project[],
 }
 
 export interface Project {
@@ -8,6 +13,8 @@ export interface Project {
     tileCaption?: string,
     photo: any, // TODO
     events: Event[],
+    slug: string,
+    hexColor?: string;
 }
 
 export interface Post {

@@ -7,6 +7,7 @@ import type { Event, Post, Project, Tile } from "../contract";
 import { buildTiles } from "~/util/tiles";
 import { MainContext } from "./layout";
 import { isMobile } from "~/util/rwd";
+import { normalizeProject } from "~/util/normalizing";
 
 export const useNextThreeEvents = routeLoader$(async () => {
     const nextThreeEvents = await sanityClient.fetch('*[_type == "event" && date > now()] | order(date asc)[0..2]');
@@ -15,7 +16,7 @@ export const useNextThreeEvents = routeLoader$(async () => {
 
 export const useProjects = routeLoader$(async () => {
     const projects = await sanityClient.fetch('*[_type == "project"]{..., "photo": photo.asset->url}|order(orderRank)');
-    return projects as Project[];
+    return projects.map(normalizeProject) as Project[];
 })
 
 export const useLatestPost = routeLoader$(async () => {
