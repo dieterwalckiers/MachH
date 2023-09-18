@@ -2,6 +2,7 @@ import { $, component$, createContextId, Slot, useContextProvider, useOnWindow, 
 import type { RequestHandler } from "@builder.io/qwik-city";
 import MainMenu from "~/components/MainMenu/mainmenu";
 import Header from "~/components/header/header";
+import type { ScreenSize } from "~/util/rwd";
 import { getScreenSize } from "~/util/rwd";
 
 export const onGet: RequestHandler = async ({ cacheControl }) => {
@@ -17,7 +18,7 @@ export const onGet: RequestHandler = async ({ cacheControl }) => {
 
 export type MainContextData = {
     showMobileMenu: boolean;
-    screenSize: string;
+    screenSize: ScreenSize;
 };
 export const MainContext = createContextId<MainContextData>("mainContext");
 

@@ -2,6 +2,7 @@ import { component$, useContext, useStore, useVisibleTask$ } from '@builder.io/q
 import type { Event } from '../../contract';
 import EventTile from "./eventtile";
 import { MainContext } from '~/routes/layout';
+import MachHTitle from '../shared/machhtitle';
 
 export interface Props {
     events: Event[];
@@ -31,10 +32,10 @@ const NextEvents = component$<Props>(({ events }) => {
     });
 
     return (
-        <div class="nextevents w-full text-machh-primary border-b-[3px] border-machh-primary pt-6 font-semibold uppercase">
-            <h3 class="text-machh-primary font-semibold text-xl uppercase mb-6">
+        <section class="nextevents w-full text-machh-primary border-b-[3px] border-machh-primary pt-6 font-semibold uppercase">
+            <MachHTitle class="mb-6">
                 Komende activiteiten
-            </h3>
+            </MachHTitle>
             <div class="flex justify-between relative overflow-x-auto py-8">
                 {
                     events.slice(0, 3).map((event, i) => (
@@ -42,7 +43,7 @@ const NextEvents = component$<Props>(({ events }) => {
                     ))
                 }
             </div>
-        </div>
+        </section>
     );
 });
 

@@ -53,6 +53,7 @@ const MainMenu = component$(() => {
                     md:flex-row
                     md:static md:border-none
                     md:flex md:items-center md:justify-between md:ml-12
+                    z-10
                     `}
                 >
                     {menu

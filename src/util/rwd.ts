@@ -5,6 +5,8 @@ export const LG_BREAKPOINT = 1024;
 export const XL_BREAKPOINT = 1280;
 export const XXL_BREAKPOINT = 1536;
 
+export type ScreenSize = "my-xs" | "md" | "lg" | "xl" | "xxl" | "sm";
+
 export function isMyXs() {
     return window.innerWidth <= MY_XS_BREAKPOINT;
 }
@@ -29,7 +31,11 @@ export function isXxl() {
     return window.innerWidth <= XXL_BREAKPOINT;
 }
 
-export function getScreenSize(): "my-xs" | "md" | "lg" | "xl" | "xxl" | "sm" {
+export function isMobile(screenSize: ScreenSize): boolean {
+    return screenSize === "my-xs" || screenSize === "sm";
+}
+
+export function getScreenSize(): ScreenSize {
     if (isMyXs()) {
         return "my-xs";
     } else if (isSm()) {
