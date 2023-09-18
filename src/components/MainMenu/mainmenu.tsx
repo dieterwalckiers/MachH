@@ -11,7 +11,6 @@ const MainMenu = component$(() => {
     const mainCtx = useContext(MainContext);
 
     const ref = useCloseOnOutsideClick();
-    // TODO: PUT IN A REPO
 
     return (
         <div class="w-full flex items-center justify-between border-machh-primary border-b-[3px] pb-6">

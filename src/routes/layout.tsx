@@ -1,7 +1,8 @@
-import { component$, createContextId, Slot, useContextProvider, useStore } from "@builder.io/qwik";
+import { $, component$, createContextId, Slot, useContextProvider, useOnWindow, useStore, useVisibleTask$ } from "@builder.io/qwik";
 import type { RequestHandler } from "@builder.io/qwik-city";
 import MainMenu from "~/components/MainMenu/mainmenu";
 import Header from "~/components/header/header";
+import { getScreenSize } from "~/util/rwd";
 
 export const onGet: RequestHandler = async ({ cacheControl }) => {
     // Control caching for this request for best performance and to reduce hosting costs:
@@ -16,6 +17,7 @@ export const onGet: RequestHandler = async ({ cacheControl }) => {
 
 export type MainContextData = {
     showMobileMenu: boolean;
+    screenSize: string;
 };
 export const MainContext = createContextId<MainContextData>("mainContext");
 
@@ -24,8 +26,19 @@ export default component$(() => {
 
     const store = useStore<MainContextData>({
         showMobileMenu: false,
+        screenSize: "md",
     });
     useContextProvider(MainContext, store);
+
+    useOnWindow(
+        'resize',
+        $(() => {
+            store.screenSize = getScreenSize()
+        })
+    )
+    useVisibleTask$(async () => {
+        store.screenSize = getScreenSize();
+    });
 
     return (
         <div class="w-full flex flex-col py-4 items-center font-roboto">

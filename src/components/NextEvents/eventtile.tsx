@@ -9,7 +9,7 @@ export interface Props {
 const EventTile = component$<Props>(({ event }) => {
 
     return (
-        <div class="w-full flex">
+        <div class="w-full flex" style={{ minWidth: "250px" }}>
             <div class="mr-6">
                 <div class="w-10 h-10 rounded-full bg-machh-primary" />
             </div>
