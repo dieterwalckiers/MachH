@@ -7,7 +7,7 @@ import EventCard from "~/components/EventCard/EventCard";
 import { normalizeEvent } from "~/util/normalizing";
 
 export const useEvents = routeLoader$(async () => {
-  const events = await sanityClient.fetch('*[_type == "event"]|order(date desc){..., linkedProjects[]->{name, slug, hexColor}}');
+  const events = await sanityClient.fetch('*[_type == "event"]|order(date desc){date,time,place,price,title,slug,"image": image.asset->url,linkedProjects[]->{name, slug, hexColor}}');
   console.log(events[0].linkedProjects)
   return events.map(normalizeEvent) as Event[];
 })
@@ -29,7 +29,7 @@ export default component$(() => {
         </svg>
       </div>
       {events.value.map((event, i) => (
-        <EventCard event={event} key={`evtc${i}`} />
+        <EventCard event={event} key={`evtc${i}`} clickable />
       ))}
     </div>
   );

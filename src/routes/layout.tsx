@@ -1,6 +1,7 @@
 import { $, component$, createContextId, Slot, useContextProvider, useOnWindow, useStore, useVisibleTask$ } from "@builder.io/qwik";
 import type { RequestHandler } from "@builder.io/qwik-city";
 import MainMenu from "~/components/MainMenu/mainmenu";
+import Footer from "~/components/footer/footer";
 import Header from "~/components/header/header";
 import type { ScreenSize } from "~/util/rwd";
 import { getScreenSize } from "~/util/rwd";
@@ -42,11 +43,12 @@ export default component$(() => {
     });
 
     return (
-        <div class="w-full flex flex-col py-4 items-center font-roboto">
+        <div class="w-full flex flex-col py-4 items-center font-roboto text-xl">
             <div class="w-[calc(100vw-1rem)] md:w-[50rem] flex flex-col items-center">
                 <Header />
                 <MainMenu />
                 <Slot />
+                <Footer />
             </div>
         </div>
     );

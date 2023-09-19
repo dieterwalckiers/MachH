@@ -3,6 +3,7 @@ import { useLocation, useContent, Link } from '@builder.io/qwik-city';
 import stamp from '/logo_mach_h_def_stamp.png'
 import useCloseOnOutsideClick from '~/util/useCloseOnOutsideClick';
 import { MainContext } from '~/routes/layout';
+import SanityImage from '~/components/SanityImage/sanityimage';
 
 const MainMenu = component$(() => {
     const { menu } = useContent();
@@ -16,7 +17,7 @@ const MainMenu = component$(() => {
         <div class="w-full flex items-center justify-between border-machh-primary border-b-[3px] pb-6">
             <div>
                 <Link href="/">
-                    <img src={stamp} class="stamp" alt="Mach-H stamp" width="60" height="60" />
+                    <SanityImage url={stamp} alt="Mach-H stamp" width={60} height={60} resolutionsOverride={[60]} />
                 </Link>
             </div>
             <div class="flex items-center relative">

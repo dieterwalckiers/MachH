@@ -8,6 +8,7 @@ module.exports = {
     extend: {
       colors: {
         "machh-primary": "#009548",
+        "machh-primary-light": "#00B050",
       },
       fontFamily: {
         "roboto": ["Roboto", ...defaultTheme.fontFamily.sans],

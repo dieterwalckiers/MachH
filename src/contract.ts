@@ -6,6 +6,10 @@ export interface Event {
     price?: string;
     slug: string;
     linkedProjects?: Project[],
+    image?: any, // TODO
+    description?: string;
+    ctaHref?: string;
+    ctaText?: string;
 }
 
 export interface Project {
@@ -30,5 +34,6 @@ export interface Tile {
     caption?: string;
     text?: string;
     mobileTitle?: string;
+    href?: string;
 }
 

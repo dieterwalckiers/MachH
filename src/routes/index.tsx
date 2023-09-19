@@ -7,11 +7,11 @@ import type { Event, Post, Project, Tile } from "../contract";
 import { buildTiles } from "~/util/tiles";
 import { MainContext } from "./layout";
 import { isMobile } from "~/util/rwd";
-import { normalizeProject } from "~/util/normalizing";
+import { normalizeEvent, normalizeProject } from "~/util/normalizing";
 
 export const useNextThreeEvents = routeLoader$(async () => {
     const nextThreeEvents = await sanityClient.fetch('*[_type == "event" && date > now()] | order(date asc)[0..2]');
-    return nextThreeEvents as Event[];
+    return nextThreeEvents.map((e: any) => normalizeEvent(e, true)) as Event[];
 });
 
 export const useProjects = routeLoader$(async () => {

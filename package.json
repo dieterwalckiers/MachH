@@ -39,6 +39,7 @@
     "vite-tsconfig-paths": "4.2.0"
   },
   "dependencies": {
-    "@sanity/client": "^6.4.9"
+    "@sanity/client": "^6.4.9",
+    "qwik-image": "^0.0.8"
   }
 }
