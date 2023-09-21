@@ -7,7 +7,7 @@ export function normalizeEvent(event: any, skipLinkedProjects = false): Event {
         ...event,
         date: `${d}/${m}/${y}`,
         slug: event.slug.current,
-        ...(!skipLinkedProjects ? { linkedProjects: event.linkedProjects.map(normalizeProject) } : {}),
+        ...(!skipLinkedProjects ? { linkedProjects: event.linkedProjects?.map(normalizeProject) } : {}),
     }
 }
 

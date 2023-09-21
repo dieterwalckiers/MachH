@@ -10,11 +10,10 @@ interface Props {
     event: Event;
     clickable?: boolean;
     showDetail?: boolean;
+    noBottomBorder?: boolean;
 }
 
-const EventCard = component$<Props>(({ event, clickable, showDetail }) => {
-
-    console.log(event)
+const EventCard = component$<Props>(({ event, clickable, showDetail, noBottomBorder }) => {
 
     const nav = useNavigate();
 
@@ -27,7 +26,7 @@ const EventCard = component$<Props>(({ event, clickable, showDetail }) => {
     return (
         <div
             class={`flex flex-col justify-between text-machh-primary
-                font-semibold text-lg border-b-[3px] border-machh-primary ${showDetail ? "" : "h-56"} py-8`}
+                font-semibold text-lg ${noBottomBorder ? "" : "border-b-[3px] border-machh-primary"} ${showDetail ? "" : "h-56"} py-8`}
         >
             <div class="flex w-full">
                 <div class={`practicaldetails flex w-1/3 ${clickable ? "cursor-pointer" : ""}`} onClick$={onClick}>
@@ -39,12 +38,12 @@ const EventCard = component$<Props>(({ event, clickable, showDetail }) => {
                         <label>{event.price}</label>
                     </div>
                 </div>
-                <div class={`grow eventtitle ${clickable ? "cursor-pointer" : ""}`} onClick$={onClick}>
+                <div class={`max-w-[50%] grow eventtitle ${clickable ? "cursor-pointer" : ""}`} onClick$={onClick}>
                     <MachHTitle size="text-3xl">
                         {event.title}
                     </MachHTitle>
                 </div>
-                <div class={`flex justify-end ${clickable ? "cursor-pointer" : ""}`} onClick$={onClick}>
+                <div class={`grow flex justify-end ${clickable ? "cursor-pointer" : ""}`} onClick$={onClick}>
                     <div class={`${event.image ? "" : "invisible"}`}>
                         <SanityImage url={event.image} width={120} height={120} alt="event-image" resolutionsOverride={[120]} />
                     </div>
@@ -58,7 +57,7 @@ const EventCard = component$<Props>(({ event, clickable, showDetail }) => {
             <div class="flex ml-[4.5rem] mt-8 justify-between items-center">
                 <div class="flex text-sm">
                     {event.linkedProjects?.map((project, i) => (
-                        <Link href={`/project/${project.slug}`} key={`projlink${i}`}>
+                        <Link href={`/${project.slug}`} key={`projlink${i}`}>
                             <label style={{ color: project.hexColor ?? "inherit" }} class="uppercase block ml-4 cursor-pointer hover:opacity-75">
                                 {project.name}
                             </label>

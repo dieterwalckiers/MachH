@@ -1,19 +1,54 @@
 import type { Event } from "~/contract";
 import MachHTitle from "~/components/shared/machhtitle";
 import { component$ } from "@builder.io/qwik";
-import { routeLoader$ } from "@builder.io/qwik-city";
+import type { RequestEventLoader } from "@builder.io/qwik-city";
+import { Link, routeLoader$ } from "@builder.io/qwik-city";
 import sanityClient from "~/cms/sanityClient";
 import EventCard from "~/components/EventCard/EventCard";
 import { normalizeEvent } from "~/util/normalizing";
 
-export const useEvents = routeLoader$(async () => {
-  const events = await sanityClient.fetch('*[_type == "event"]|order(date desc){date,time,place,price,title,slug,"image": image.asset->url,linkedProjects[]->{name, slug, hexColor}}');
-  console.log(events[0].linkedProjects)
-  return events.map(normalizeEvent) as Event[];
+const EVENTS_ON_PAGE = 6;
+
+export const useEvents = routeLoader$(async (requestEvent: RequestEventLoader) => {
+  const from = parseInt(requestEvent.query.get("from") ?? "0");
+  const to = parseInt(requestEvent.query.get("to") ?? `${EVENTS_ON_PAGE}`);
+  const fromMinusOne = Math.max(from - 1, 0);
+  const toPlusOne = to + 1;
+  const rawEvents = await sanityClient.fetch(`*[_type == "event"]|order(date desc){date,time,place,price,title,slug,"image": image.asset->url,linkedProjects[]->{name, slug, hexColor}}[${fromMinusOne}...${toPlusOne}]`);
+  const events = rawEvents.map(normalizeEvent) as Event[];
+  let moreFurther;
+  if (events.length > (to - from)) {
+    moreFurther = true;
+    events.pop();
+  }
+  if (from !== fromMinusOne) {
+    events.shift();
+  }
+  return {
+    events,
+    pagingInfo: {
+      isFirstPage: from === 0,
+      isLastPage: !moreFurther,
+      from,
+      to,
+    }
+  }
 })
 
 export default component$(() => {
-  const events = useEvents();
+
+  const useEventsResult = useEvents();
+  const { events, pagingInfo } = useEventsResult.value;
+
+
+  const prevLink = pagingInfo.isFirstPage ?
+    null :
+    `/calendar?from=${Math.max(0, pagingInfo.from - EVENTS_ON_PAGE)}&to=${Math.max(0, pagingInfo.to - EVENTS_ON_PAGE)}`;
+
+  const nextLink = pagingInfo.isLastPage ?
+    null :
+    `/calendar?from=${pagingInfo.to}&to=${pagingInfo.to + EVENTS_ON_PAGE}`;
+
   return (
     <div class="w-full">
       <div class="header flex items-center justify-between w-full py-8 border-b-[3px] border-machh-primary">
@@ -28,9 +63,27 @@ export default component$(() => {
           />
         </svg>
       </div>
-      {events.value.map((event, i) => (
-        <EventCard event={event} key={`evtc${i}`} clickable />
+      {events.map((event, i) => (
+        <EventCard
+          event={event}
+          key={`evtc${i}`}
+          clickable
+          noBottomBorder={i === events.length - 1 && pagingInfo.isFirstPage && pagingInfo.isLastPage}
+        />
       ))}
+      {
+        pagingInfo.isFirstPage && pagingInfo.isLastPage ? null : (
+          <div class="my-12 flex justify-between w-full text-machh-primary text-5xl">
+            <Link class={`cursor-pointer ${prevLink ? "" : "invisible"}`} href={prevLink ?? ""}>
+              &#x2190;
+            </Link>
+            <Link class={`cursor-pointer ${nextLink ? "" : "invisible"}`} href={nextLink ?? ""}>
+              &#x2192;
+            </Link>
+          </div>
+        )
+
+      }
     </div>
   );
 });
