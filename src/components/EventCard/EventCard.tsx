@@ -11,15 +11,17 @@ interface Props {
     clickable?: boolean;
     showDetail?: boolean;
     noBottomBorder?: boolean;
+    from?: number;
+    to?: number;
 }
 
-const EventCard = component$<Props>(({ event, clickable, showDetail, noBottomBorder }) => {
+const EventCard = component$<Props>(({ event, clickable, showDetail, noBottomBorder, from, to }) => {
 
     const nav = useNavigate();
 
     const onClick = $(() => {
         if (clickable) {
-            nav(`/event/${event.slug}`);
+            nav(`/event/${event.slug}?s=l&f=${from}&t=${to}`);
         }
     });
 

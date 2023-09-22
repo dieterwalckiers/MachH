@@ -1,4 +1,4 @@
-import { component$ } from "@builder.io/qwik";
+import { component$, useComputed$ } from "@builder.io/qwik";
 import type { RequestEventLoader } from "@builder.io/qwik-city";
 import { Link, routeLoader$ } from "@builder.io/qwik-city";
 import sanityClient from "~/cms/sanityClient";
@@ -6,14 +6,29 @@ import EventCard from "~/components/EventCard/EventCard";
 import MachHTitle from "~/components/shared/machhtitle";
 import { normalizeEvent } from "~/util/normalizing";
 
-export const useEvent = routeLoader$(async (requestEvent: RequestEventLoader) => {
+export const useRouteInfo = routeLoader$(async (requestEvent: RequestEventLoader) => {
     const [event] = await sanityClient.fetch(`*[_type == "event" && slug.current == "${requestEvent.params.slug}"]{..., "image": image.asset->url, linkedProjects[]->{name, slug, hexColor}}`);
-    return normalizeEvent(event);
+    return {
+        event: normalizeEvent(event),
+        source: requestEvent.query.get("s"),
+        year: requestEvent.query.get("y"),
+        monthIndex: requestEvent.query.get("mI"),
+        from: requestEvent.query.get("f"),
+        to: requestEvent.query.get("t"),
+    };
 })
 
 const Event = component$(() => {
 
-    const eventSignal = useEvent();
+    const routeInfoSignal = useRouteInfo();
+    const { event, source, year, monthIndex, from, to } = routeInfoSignal.value;
+    const backToCalendarLink = useComputed$(() => {
+        if (source === "m") {
+            return `/calendar-overview?y=${year}&mI=${monthIndex}`;
+        } else {
+            return `/calendar?from=${from}&to=${to}`;
+        }
+    });
 
     return (
         <div class="w-full">
@@ -29,8 +44,8 @@ const Event = component$(() => {
                     />
                 </svg>
             </div>
-            <EventCard event={eventSignal.value} showDetail />
-            <Link href="/calendar" class="flex items-center text-machh-primary text-xl font-medium leading-none py-8 cursor-pointer">
+            <EventCard event={event} showDetail />
+            <Link href={backToCalendarLink.value} class="flex items-center text-machh-primary text-xl font-medium leading-none py-8 cursor-pointer">
                 <label class="text-4xl pointer-events-none">&#x2190;</label>
                 <div class="whitespace-break-spaces ml-2">
                     {`terug naar

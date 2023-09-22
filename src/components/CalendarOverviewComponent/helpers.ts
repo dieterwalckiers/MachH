@@ -17,9 +17,30 @@ export function getMonths(year: number): { [monthIndex: number]: { name: string,
     };
 }
 
-export function getFromTo(year: number = new Date().getFullYear(), monthIndex: number = new Date().getMonth()) {
+function ensureTwoDigits(nr: number): string {
+    return nr < 10 ? `0${nr}` : `${nr}`;
+}
+
+export function getFromTo(
+    year: number,
+    monthIndex: number = new Date().getMonth()
+) {
     return {
-        dateStrFrom: `${year}-${monthIndex + 1}-01`,
-        dateStrTo: `${year}-${monthIndex + 1}-${getMonths(year)[monthIndex].nrDays}`,
+        dateStrFrom: buildDateLabel(year, monthIndex + 1, 1),
+        dateStrTo: buildDateLabel(year, monthIndex + 1, getMonths(year)[monthIndex].nrDays),
     }
+}
+
+export function buildDateLabel(year: number, month: number, day: number): string {
+    return `${ensureTwoDigits(day)}/${ensureTwoDigits(month)}/${year}`
+}
+
+export function compareTimeString(timeStr1: string, timeStr2: string): 1 | -1 | 0 {
+    const [hour1, minute1] = timeStr1.split(":").map(str => parseInt(str));
+    const [hour2, minute2] = timeStr2.split(":").map(str => parseInt(str));
+    if (hour1 > hour2) return 1;
+    if (hour1 < hour2) return -1;
+    if (minute1 > minute2) return 1;
+    if (minute1 < minute2) return -1;
+    return 0;
 }

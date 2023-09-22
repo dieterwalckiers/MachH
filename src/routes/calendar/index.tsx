@@ -67,6 +67,8 @@ export default component$(() => {
           key={`evtc${i}`}
           clickable
           noBottomBorder={i === events.length - 1 && pagingInfo.isFirstPage && pagingInfo.isLastPage}
+          from={pagingInfo.from}
+          to={pagingInfo.to}
         />
       ))}
       {
