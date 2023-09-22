@@ -6,6 +6,7 @@ import { Link, routeLoader$ } from "@builder.io/qwik-city";
 import sanityClient from "~/cms/sanityClient";
 import EventCard from "~/components/EventCard/EventCard";
 import { normalizeEvent } from "~/util/normalizing";
+import Calendar from "../../svg/calendar.svg?jsx";
 
 const EVENTS_ON_PAGE = 6;
 
@@ -55,13 +56,10 @@ export default component$(() => {
         <MachHTitle size="text-6xl">
           Kalender
         </MachHTitle>
-        <svg class="h-12 w-12 fill-machh-primary cursor-pointer" viewBox="0 0 24 24">
-          <path
-            fill-rule="evenodd"
-            clip-rule="evenodd"
-            d="M4 6h16v2H4V6zm0 5h16v2H4v-2zm0 5h16v2H4v-2z"
-          />
-        </svg>
+        <Link href="/calendar-overview" class="flex text-machh-primary items-center cursor-pointer hover:opacity-70 transition-all duration-300">
+          <label class="font-normal text-md pointer-events-none">naar maandoverzicht</label>&nbsp;
+          <Calendar class="w-8 h-8 fill-current" />
+        </Link>
       </div>
       {events.map((event, i) => (
         <EventCard
