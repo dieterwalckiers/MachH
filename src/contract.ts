@@ -23,10 +23,12 @@ export interface Project {
 
 export interface Post {
     title: string,
-    date: Date,
-    body: any, // TODO
-    linkedProjects: any[], // TODO
+    date: string,
+    body: string,
+    image?: any, // TODO
+    linkedProjects?: Project[],
     ctaHref?: string,
+    ctaText?: string,
 }
 
 export interface Tile {

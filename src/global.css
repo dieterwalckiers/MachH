@@ -24,3 +24,8 @@ body {
   padding: 0;
   line-height: inherit;
 }
+
+.dimsixty {
+  width: 60px;
+  height: 60px;
+}

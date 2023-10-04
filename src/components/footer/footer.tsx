@@ -1,7 +1,6 @@
 import { component$ } from '@builder.io/qwik';
-import facebook from '/logo_facebook_green.png'
-import instagram from '/logo_instagram_green.svg'
-import SanityImage from '../SanityImage/sanityimage';
+import FacebookLogo from '~/img/logo_facebook_green.png?jsx'
+import InstagramLogo from '~/img/logo_instagram_green.svg?jsx'
 
 
 const Footer = component$(() => {
@@ -16,8 +15,8 @@ const Footer = component$(() => {
         {/* TODO RM LITERAL EMAIL! */}
       </div>
       <div class="flex">
-        <SanityImage url={facebook} alt="Facebook" width={60} height={60} resolutionsOverride={[60]} />
-        <SanityImage url={instagram} alt="Instagram" width={60} height={60} resolutionsOverride={[60]} />
+        <FacebookLogo alt="Facebook" style={{ width: "60px", height: "60px" }} />
+        <InstagramLogo class="dimsixty" alt="Instagram" style={{ width: "60px", height: "60px "}} />
       </div>
     </div>
   );

@@ -16,7 +16,7 @@ export const useEvents = routeLoader$(async (requestEvent: RequestEventLoader) =
   const fromMinusOne = Math.max(from - 1, 0);
   const toPlusOne = to + 1;
   const rawEvents = await sanityClient.fetch(`*[_type == "event"]|order(date desc){date,time,place,price,title,slug,"image": image.asset->url,linkedProjects[]->{name, slug, hexColor}}[${fromMinusOne}...${toPlusOne}]`);
-  const events = rawEvents.map(normalizeEvent) as Event[];
+  const events = rawEvents.map((e: any) => normalizeEvent(e)) as Event[];
   let moreFurther;
   if (events.length > (to - from)) {
     moreFurther = true;
