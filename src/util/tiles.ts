@@ -1,5 +1,4 @@
 import type { Project, Post, Tile } from "~/contract";
-import { toPlainText } from "./portableText";
 
 export function buildTiles(
     projects: Project[],
@@ -14,7 +13,7 @@ export function buildTiles(
         href: `/${project.slug}`,
     }));
     const latestPostTile = {
-        text: toPlainText(latestPost.body),
+        text: latestPost.body,
         mobileTitle: "Nieuws",
         href: "/news",
     } as Tile;

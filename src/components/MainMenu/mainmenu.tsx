@@ -1,4 +1,4 @@
-import { component$, useContext } from '@builder.io/qwik';
+import { JSXChildren, component$, useContext } from '@builder.io/qwik';
 import { useLocation, useContent, Link } from '@builder.io/qwik-city';
 import Stamp from '~/img/logo_mach_h_def_stamp.png?jsx'
 import useCloseOnOutsideClick from '~/util/useCloseOnOutsideClick';
@@ -56,10 +56,10 @@ const MainMenu = component$(() => {
                     z-10
                     `}
                 >
-                    {menu
-                        ? menu.items?.map((item) => {
+                    {menu ?
+                        menu.items?.reduce((reduced, item, i) => {
                             console.log(`${item.href} vs ${url.pathname}`)
-                            return (
+                            reduced.push(
                                 <h5
                                     class={`mt-2 ml-4 mr-4 md:mt-0 md:mr-0 md:ml-12 ${url.pathname === item.href ? "underline underline-offset-8" : ""}`}
                                     key={item.href}
@@ -69,7 +69,25 @@ const MainMenu = component$(() => {
                                     </Link>
                                 </h5>
                             )
-                        })
+
+                            if (i === 0) { // hack menu to add projects link
+                                reduced.push(
+                                    <>
+                                        <h5
+                                            class={`mt-2 ml-4 mr-4 md:mt-0 md:mr-0 md:ml-12 ${url.pathname === item.href ? "underline underline-offset-8" : ""}`}
+                                            key={item.href}
+                                        >
+                                            <label>
+                                                projects
+                                                {/* pick back up: flesh out */}
+                                            </label>
+                                        </h5>
+                                    </>
+                                )
+                            }
+
+                            return reduced;
+                        }, [] as JSXChildren[])
                         : null}
                 </nav>
             </div>

@@ -12,9 +12,10 @@ export interface SanityimageProps {
   alt: string,
   resolutionsOverride?: number[],
   placeholderColor?: string,
+  className?: string;
 }
 
-const Sanityimage = component$<SanityimageProps>(({ url, width, height, alt, resolutionsOverride, placeholderColor }) => {
+const Sanityimage = component$<SanityimageProps>(({ url, width, height, alt, resolutionsOverride, placeholderColor, className }) => {
 
   const imageTransformer$ = $(
     ({ /*src,*/ width, height }: ImageTransformerProps): string => {
@@ -39,6 +40,7 @@ const Sanityimage = component$<SanityimageProps>(({ url, width, height, alt, res
       height={height}
       alt={alt}
       placeholder={placeholderColor}
+      class={className || ""}
     />
   );
 });

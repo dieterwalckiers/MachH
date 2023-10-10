@@ -12,6 +12,11 @@ export interface Event {
     ctaText?: string;
 }
 
+export interface AboutUs {
+    title: string;
+    body: string;
+}
+
 export interface Project {
     name: string,
     tileCaption?: string,

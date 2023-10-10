@@ -24,9 +24,9 @@ const Event = component$(() => {
     const { event, source, year, monthIndex, from, to } = routeInfoSignal.value;
     const backToCalendarLink = useComputed$(() => {
         if (source === "m") {
-            return `/calendar-overview?y=${year}&mI=${monthIndex}`;
+            return `/calendar-overview${year !== null && monthIndex !== null ? `?y=${year}&mI=${monthIndex}` : ""}`;
         } else {
-            return `/calendar?from=${from}&to=${to}`;
+            return `/calendar${from !== null && to !== null ? `?from=${from}&to=${to}` : ""}`;
         }
     });
 
