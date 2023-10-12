@@ -3,21 +3,16 @@ import { routeLoader$, type DocumentHead } from "@builder.io/qwik-city";
 import sanityClient from "~/cms/sanityClient";
 import NextEvents from "~/components/NextEvents/nextevents";
 import HomepageTiles from "~/components/HomepageTiles/homepagetiles"
-import type { Event, Project, Tile } from "../contract";
+import type { Event, Tile } from "../contract";
 import { buildTiles } from "~/util/tiles";
 import { MainContext } from "./layout";
 import { isMobile } from "~/util/rwd";
-import { normalizeEvent, normalizePost, normalizeProject } from "~/util/normalizing";
+import { normalizeEvent, normalizePost } from "~/util/normalizing";
 
 export const useNextThreeEvents = routeLoader$(async () => {
     const nextThreeEvents = await sanityClient.fetch('*[_type == "event" && date > now()] | order(date asc)[0..2]');
     return nextThreeEvents.map((e: any) => normalizeEvent(e, true)) as Event[];
 });
-
-export const useProjects = routeLoader$(async () => {
-    const projects = await sanityClient.fetch('*[_type == "project"]{..., "photo": photo.asset->url}|order(orderRank)');
-    return projects.map((p: any) => normalizeProject(p)) as Project[];
-})
 
 export const useLatestPost = routeLoader$(async () => {
     const latestPost = await sanityClient.fetch('*[_type == "post"]|order(date desc)[0]');
@@ -26,7 +21,7 @@ export const useLatestPost = routeLoader$(async () => {
 
 export default component$(() => {
     const nextThreeEventsSignal = useNextThreeEvents();
-    const projects = useProjects();
+    
     const latestPost = useLatestPost();
 
     const store = useStore<{ tiles: Tile[] }>({
@@ -35,8 +30,12 @@ export default component$(() => {
 
     const mainCtx = useContext(MainContext);
 
-    useTask$(({ track }) => { // diagn rebuild on window resize
-        const tiles = buildTiles(projects.value, latestPost.value, isMobile(mainCtx.screenSize));
+    useTask$(({ track }) => {
+        const { projects } = mainCtx;
+        if (!projects) {
+            return;
+        }
+        const tiles = buildTiles(projects, latestPost.value, isMobile(mainCtx.screenSize));
         store.tiles = tiles;
         track(() => [projects, latestPost, mainCtx.screenSize]);
     })

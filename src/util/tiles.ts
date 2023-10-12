@@ -10,6 +10,7 @@ export function buildTiles(
         caption: project.tileCaption,
         text: project.name,
         mobileTitle: i === 0 && isMobile ? "Onze projecten" : undefined,
+        mobileTitleId: i === 0 && isMobile ? "projects" : undefined,
         href: `/${project.slug}`,
     }));
     const latestPostTile = {

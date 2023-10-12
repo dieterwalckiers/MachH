@@ -42,5 +42,6 @@ export interface Tile {
     text?: string;
     mobileTitle?: string;
     href?: string;
+    mobileTitleId?: string;
 }
 
