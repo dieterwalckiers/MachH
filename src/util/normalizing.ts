@@ -1,6 +1,5 @@
 
 import type { AboutUs, Event, Post, Project } from "~/contract";
-import { toPlainText } from "./portableText";
 
 export function normalizeEvent(event: any, skipLinkedProjects = false): Event {
     const [y, m, d] = event.date.split('-')

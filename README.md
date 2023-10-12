@@ -1,4 +1,14 @@
-# Qwik City App ⚡️
+# dyte notes
+
+## troubleshooting
+
+build failed with generic "Command failed with exit code 1"
+
+-> was due to an unused import.
+-> somehow running "npx qwik build --help" revealed this (cause it used latest version of qwik?)
+
+
+# Qwik City App 
 
 - [Qwik Docs](https://qwik.builder.io/)
 - [Discord](https://qwik.builder.io/chat)
@@ -107,3 +117,6 @@ Notice that you might need a [Vercel account](https://docs.Vercel.com/get-starte
 The project is ready to be deployed to Vercel. However, you will need to create a git repository and push the code to it.
 
 You can [deploy your site to Vercel](https://vercel.com/docs/concepts/deployments/overview) either via a Git provider integration or through the Vercel CLI.
+
+
+
