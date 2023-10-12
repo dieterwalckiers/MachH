@@ -36,13 +36,6 @@ const Event = component$(() => {
                 <MachHTitle size="text-6xl">
                     Activiteit
                 </MachHTitle>
-                <svg class="h-12 w-12 fill-machh-primary cursor-pointer" viewBox="0 0 24 24">
-                    <path
-                        fill-rule="evenodd"
-                        clip-rule="evenodd"
-                        d="M4 6h16v2H4V6zm0 5h16v2H4v-2zm0 5h16v2H4v-2z"
-                    />
-                </svg>
             </div>
             <EventCard event={event} showDetail />
             <Link href={backToCalendarLink.value} class="flex items-center text-machh-primary text-xl font-medium leading-none py-8 cursor-pointer">

@@ -26,11 +26,11 @@ export default component$(() => {
 
   return (
     <div class="w-full">
-      <div class="header flex items-center justify-between w-full py-8 border-b-[3px] border-machh-primary">
-        <MachHTitle size="text-6xl">
+      <div class="header flex flex-col md:flex-row items-center justify-between w-full py-8 border-b-[3px] border-machh-primary">
+        <MachHTitle size="text-6xl" class="self-start md:self-auto">
           Kalender
         </MachHTitle>
-        <Link href="/calendar" class="flex text-machh-primary items-center cursor-pointer hover:opacity-70 transition-all duration-300">
+        <Link href="/calendar" class="flex text-machh-primary items-center cursor-pointer hover:opacity-70 transition-all duration-300 mt-4 md:mt-0 self-end md:self-auto">
           <label class="font-normal text-md">naar activiteitenlijst</label>&nbsp;&nbsp;
           <List class="w-6 h-6 fill-current" />
         </Link>

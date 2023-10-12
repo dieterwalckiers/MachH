@@ -28,7 +28,7 @@ const Project = component$(() => {
                     {project.name}
                 </MachHTitle>
             </div>
-            <div class="textContainer w-full py-8 text-machh-primary">
+            <div class="textContainer w-full py-8 text-machh-primary text-justify">
                 <Sanityimage
                     url={project.photo}
                     alt={`${project.name} main image`}

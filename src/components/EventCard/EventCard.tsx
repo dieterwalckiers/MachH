@@ -28,24 +28,24 @@ const EventCard = component$<Props>(({ event, clickable, showDetail, noBottomBor
     return (
         <div
             class={`flex flex-col justify-between text-machh-primary
-                font-semibold text-lg ${noBottomBorder ? "" : "border-b-[3px] border-machh-primary"} ${showDetail ? "" : "h-56"} py-8`}
+                font-semibold text-lg ${noBottomBorder ? "" : "border-b-[3px] border-machh-primary"} ${showDetail ? "" : "md:h-56"} py-8`}
         >
-            <div class="flex w-full">
-                <div class={`practicaldetails flex w-1/3 ${clickable ? "cursor-pointer" : ""}`} onClick$={onClick}>
-                    <GreenBall />
-                    <div class="flex flex-col ml-12 pointer-events-none">
+            <div class="flex w-full flex-col md:flex-row">
+                <div class={`practicaldetails flex ${clickable ? "cursor-pointer" : ""} md:w-1/3`} onClick$={onClick}>
+                    <GreenBall class="hidden md:block" />
+                    <div class="flex flex-col pointer-events-none md:ml-12">
                         <label>{event.date}</label>
                         <label>{event.time}</label>
                         <label>{event.place}</label>
                         <label>{event.price}</label>
                     </div>
                 </div>
-                <div class={`max-w-[50%] grow eventtitle ${clickable ? "cursor-pointer" : ""}`} onClick$={onClick}>
+                <div class={`grow eventtitle ${clickable ? "cursor-pointer" : ""} md:max-w-[50%]`} onClick$={onClick}>
                     <MachHTitle size="text-3xl">
                         {event.title}
                     </MachHTitle>
                 </div>
-                <div class={`grow flex justify-end ${clickable ? "cursor-pointer" : ""}`} onClick$={onClick}>
+                <div class={`grow flex ${clickable ? "cursor-pointer" : ""} mt-4 md:mt-0 md:justify-end`} onClick$={onClick}>
                     <div class={`${event.image ? "" : "invisible"}`}>
                         <SanityImage url={event.image} width={120} height={120} alt="event-image" resolutionsOverride={[120]} />
                     </div>

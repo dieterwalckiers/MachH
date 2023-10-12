@@ -19,13 +19,9 @@ export default component$(() => {
                     {aboutUs.value.title}
                 </MachHTitle>
             </div>
-            <div class="w-full flex justify-center p-12 text-machh-primary font-semibold">
-                <div class="w-4/5 text-justify">
-                    {aboutUs.value.body}
-                </div>
+            <div class="w-full flex justify-center py-12 text-machh-primary text-justify">
+                {aboutUs.value.body}
             </div>
-
-
         </div>
     );
 });
