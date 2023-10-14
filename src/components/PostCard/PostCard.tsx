@@ -22,7 +22,7 @@ const PostCard = component$<Props>(({ post, noBottomBorder }) => {
             <div class="pt-4 pb-3 md:pt-6 md:pb-12">
                 {post.date}
             </div>
-            <div class="flex flex-col-reverse md:flex-row">
+            <div class="flex flex-col-reverse md:flex-row text-justify">
                 <div class="font-semibold pr-0 pt-4 md:pr-4 md:pt-0">
                     {post.body}
                 </div>
