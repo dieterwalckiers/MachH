@@ -41,6 +41,10 @@ export const Calendaroverviewcomponent = component$<CalendaroverviewcomponentPro
     return `/calendar-overview?y=${newYear}&mI=${newMonthIndex}`;
   });
 
+  const today = useComputed$(() => {
+    return new Date();
+  });
+
   return (
     <div class="relative">
       <div class={`wrapper bg-white outline outline-machh-primary w-full my-8 text-machh-primary`}>
@@ -78,15 +82,21 @@ export const Calendaroverviewcomponent = component$<CalendaroverviewcomponentPro
         </div>
 
         <div class="flex flex-wrap">
-          {Array.from({ length: getMonths(year)[monthIndex].nrDays - 1 }, (_, i) => i + 1).map((day, i) => (
-            <CalendarDay
-              events={events.filter(e => e.date === buildDateLabel(year, monthIndex + 1, day + 1))}
-              dayLbl={day + 1} key={`day${i}`}
-              noRightBorder={(i + 1) % 7 === 0}
-              y={year}
-              mI={monthIndex}
-            />
-          ))}
+          {Array.from({ length: getMonths(year)[monthIndex].nrDays - 1 }, (_, i) => i + 1).map((day, i) => {
+            // console.log("D", day, "vs", today.value.getDate());
+            // console.log("M", monthIndex, "vs", today.value.getMonth());
+            // console.log("Y", year, "vs", today.value.getFullYear());
+            return (
+              <CalendarDay
+                events={events.filter(e => e.date === buildDateLabel(year, monthIndex + 1, day + 1))}
+                dayLbl={day + 1} key={`day${i}`}
+                noRightBorder={(i + 1) % 7 === 0}
+                y={year}
+                mI={monthIndex}
+                isToday={day + 1 === today.value.getDate() && monthIndex === today.value.getMonth() && year === today.value.getFullYear()}
+              />
+            )
+          })}
         </div>
 
       </div >

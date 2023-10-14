@@ -10,9 +10,10 @@ interface CalendarDayProps {
     events?: Event[];
     y: number;
     mI: number;
+    isToday?: boolean;
 }
 
-const CalendarDay = component$<CalendarDayProps>(({ dayLbl, noRightBorder, events, y, mI }) => {
+const CalendarDay = component$<CalendarDayProps>(({ dayLbl, noRightBorder, events, y, mI, isToday }) => {
 
     const sortedEvents = [...(events || [])].sort((a, b) => {
         if (!a.time || !b.time) {
@@ -21,8 +22,12 @@ const CalendarDay = component$<CalendarDayProps>(({ dayLbl, noRightBorder, event
         return compareTimeString(a.time, b.time);
     });
 
+    if (isToday) {
+        console.log(dayLbl, "is today");
+    }
+
     return (
-        <div class={`w-[14.2857143%] border-b ${noRightBorder ? "" : "border-r "} aspect-square`}>
+        <div class={`w-[14.2857143%] border-b ${noRightBorder ? "" : "border-r "} aspect-square ${isToday ? "outline outline-4 outline-machh-greenaccent" : ""}`}>
             <div class="w-full text-center text-gray-400 text-sm font-semibold mt-2">
                 {dayLbl}
             </div>

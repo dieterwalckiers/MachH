@@ -10,6 +10,7 @@ module.exports = {
       colors: {
         "machh-primary": "#009548",
         "machh-primary-light": "#00B050",
+        "machh-greenaccent": "#0ad203"
       },
       fontFamily: {
         "roboto": ["Roboto", ...defaultTheme.fontFamily.sans],
