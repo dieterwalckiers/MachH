@@ -17,8 +17,6 @@ export const Calendaroverviewcomponent = component$<CalendaroverviewcomponentPro
   year,
 }) => {
 
-  console.log("events", events.length)
-
   const todayLink = useComputed$(() => {
     return `/calendar-overview?y=${new Date().getFullYear()}&mI=${new Date().getMonth()}`;
   });

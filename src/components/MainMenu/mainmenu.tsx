@@ -56,7 +56,7 @@ const MainMenu = component$(() => {
                     flex flex-col
                     absolute top-0 right-0
                     bg-white
-                    p-4
+                    py-4
                     border-2 border-machh-primary
                     md:flex-row
                     md:static md:border-none
@@ -67,7 +67,6 @@ const MainMenu = component$(() => {
                 >
                     {menu ?
                         menu.items?.reduce((reduced, item, i) => {
-                            console.log(`${item.href} vs ${url.pathname}`)
                             reduced.push(
                                 <h5
                                     class={`mt-4 ml-4 mr-4 md:mt-0 md:mr-0 md:ml-12 ${url.pathname === item.href ? "underline underline-offset-8" : ""}`}

@@ -16,7 +16,6 @@ export const usePosts = routeLoader$(async (requestEvent: RequestEventLoader) =>
   const toPlusOne = to + 1;
   const rawPosts = await sanityClient.fetch(`*[_type == "post"]|order(date desc){title,date,body,slug,ctaHref,ctaText,"image": image.asset->url,linkedProjects[]->{name, slug, hexColor}}[${fromMinusOne}...${toPlusOne}]`);
   const posts = rawPosts.map((p: any) => normalizePost(p)) as Post[];
-  console.log("first post", JSON.stringify(posts[1]))
   let moreFurther;
   if (posts.length > (to - from)) {
     moreFurther = true;

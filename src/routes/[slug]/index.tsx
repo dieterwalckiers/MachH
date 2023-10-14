@@ -13,7 +13,6 @@ export const useProject = routeLoader$(async (requestEvent: RequestEventLoader) 
 
 const Project = component$(() => {
     const projectSignal = useProject();
-    console.log("rendering", projectSignal.value);
     const project = projectSignal.value;
 
     if (!project) {

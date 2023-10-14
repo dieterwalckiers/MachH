@@ -18,7 +18,6 @@ const NextEvents = component$<Props>(({ events }) => {
     const mainCtx = useContext(MainContext);
 
     useVisibleTask$(({ track }) => {
-        console.log("mainCtx.screenSize", mainCtx.screenSize)
         switch (mainCtx.screenSize) {
             case "my-xs":
             case "md":
