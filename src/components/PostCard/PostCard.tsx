@@ -26,9 +26,11 @@ const PostCard = component$<Props>(({ post, noBottomBorder }) => {
                 <div class="font-semibold pr-0 pt-4 md:pr-4 md:pt-0">
                     {post.body}
                 </div>
-                <div class={`min-w-fit ${post.image ? "" : "hidden"}`}>
-                    <SanityImage url={post.image} width={230} height={230} alt="post-image" resolutionsOverride={[230]} />
-                </div>
+                {post.image && (
+                    <div class={`min-w-fit ${post.image ? "" : "hidden"}`}>
+                        <SanityImage url={post.image} width={230} height={230} alt="post-image" resolutionsOverride={[230]} />
+                    </div>
+                )}
             </div>
             <div class="flex mt-8 justify-between items-center uppercase font-semibold">
                 <div class="flex text-sm">

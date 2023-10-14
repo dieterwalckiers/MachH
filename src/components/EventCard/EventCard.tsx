@@ -46,9 +46,14 @@ const EventCard = component$<Props>(({ event, clickable, showDetail, noBottomBor
                     </MachHTitle>
                 </div>
                 <div class={`grow flex ${clickable ? "cursor-pointer" : ""} mt-4 md:mt-0 md:justify-end`} onClick$={onClick}>
-                    <div class={`${event.image ? "" : "invisible"}`}>
-                        <SanityImage url={event.image} width={120} height={120} alt="event-image" resolutionsOverride={[120]} />
-                    </div>
+                    {!event.image ? (
+                        <div class="w-[120px] h-[120px]">
+                        </div>
+                    ) : (
+                        <div class={`${event.image ? "" : "invisible"}`}>
+                            <SanityImage url={event.image} width={120} height={120} alt="event-image" resolutionsOverride={[120]} />
+                        </div>
+                    )}
                 </div>
             </div>
             {showDetail ? (

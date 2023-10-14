@@ -19,7 +19,7 @@ const Sanityimage = component$<SanityimageProps>(({ url, width, height, alt, res
 
   const imageTransformer$ = $(
     ({ /*src,*/ width, height }: ImageTransformerProps): string => {
-      return `${url}?w=${width}&h=${height}&fit=crop&auto=format`;
+      return url && `${url}?w=${width}&h=${height}&fit=crop&auto=format`;
     }
   );
 
@@ -32,7 +32,7 @@ const Sanityimage = component$<SanityimageProps>(({ url, width, height, alt, res
   });
 
 
-  return (
+  return !url ? null : (
     <Image
       layout='fixed' // CAREFUL! SanityImage is only used for fixed layout images (non responsive)
       objectFit='cover'
