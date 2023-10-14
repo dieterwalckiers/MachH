@@ -19,7 +19,10 @@ const HomepageTile = component$<Props>(({
         `${backgroundImage}?w=245&h=245&fit=crop&auto=format`;
 
     return (
-        <Link href={tile.href} class="w-full md:w-[calc(33.3%-1.333rem)] mb-4 md:mb-8 md:[&:not(:nth-child(3))]:mr-8">
+        <Link href={tile.href} class={`w-full md:w-1/3 mb-4 md:mb-[2rem] md:relative
+            md:[&:nth-child(3n)]:left-[2rem]
+            md:[&:nth-child(3n+1)]:right-[2rem]
+            `}>
             {tile.mobileTitle && (
                 <MachHTitle class="block md:hidden my-8" id={tile.mobileTitleId}>
                     {tile.mobileTitle}
