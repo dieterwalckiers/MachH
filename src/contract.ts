@@ -19,11 +19,13 @@ export interface AboutUs {
 
 export interface Project {
     name: string,
+    description: string,
     tileCaption?: string,
     photo: any, // TODO
     events: Event[],
     slug: string,
     hexColor?: string;
+    gallery: any[];
 }
 
 export interface Post {

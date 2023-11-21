@@ -2,12 +2,13 @@ import { component$ } from "@builder.io/qwik";
 import type { RequestEventLoader } from "@builder.io/qwik-city";
 import { routeLoader$ } from "@builder.io/qwik-city";
 import sanityClient from "~/cms/sanityClient";
-import Sanityimage from "~/components/SanityImage/sanityimage";
+import Gallery from "~/components/Gallery/gallery";
+import FixedImage from "~/components/FixedImage/FixedImage";
 import MachHTitle from "~/components/shared/machhtitle";
 import { normalizeProject } from "~/util/normalizing";
 
 export const useProject = routeLoader$(async (requestEvent: RequestEventLoader) => {
-    const [project] = await sanityClient.fetch(`*[_type == "project" && slug.current == "${requestEvent.params.slug}"]{...,name,hexColor,"photo": photo.asset->url,description}`);
+    const [project] = await sanityClient.fetch(`*[_type == "project" && slug.current == "${requestEvent.params.slug}"]{...,name,hexColor,"photo": photo.asset->url,description,"gallery": gallery[].asset->url}`);
     return project && normalizeProject(project);
 })
 
@@ -19,7 +20,6 @@ const Project = component$(() => {
         return null;
     }
 
-
     return (
         <div class="w-full">
             <div class="header flex items-center justify-between w-full py-8 border-b-[3px] border-machh-primary">
@@ -28,7 +28,7 @@ const Project = component$(() => {
                 </MachHTitle>
             </div>
             <div class="textContainer w-full py-8 text-machh-primary text-justify">
-                <Sanityimage
+                <FixedImage
                     url={project.photo}
                     alt={`${project.name} main image`}
                     // eslint-disable-next-line qwik/no-react-props
@@ -37,6 +37,7 @@ const Project = component$(() => {
                     resolutionsOverride={[180]}
                 />
                 {project.description}
+                <Gallery gallery={project.gallery} />
             </div>
         </div>
     )

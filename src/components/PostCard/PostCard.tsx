@@ -1,6 +1,6 @@
 import MachHTitle from "../shared/machhtitle";
 import type { Post } from "~/contract";
-import SanityImage from "../SanityImage/sanityimage";
+import FixedImage from "../FixedImage/FixedImage";
 import { component$ } from "@builder.io/qwik";
 import { Link } from "@builder.io/qwik-city";
 import MachHButton from "../shared/machhbutton";
@@ -28,7 +28,7 @@ const PostCard = component$<Props>(({ post, noBottomBorder }) => {
                 </div>
                 {post.image && (
                     <div class={`min-w-fit ${post.image ? "" : "hidden"}`}>
-                        <SanityImage url={post.image} width={230} height={230} alt="post-image" resolutionsOverride={[230]} />
+                        <FixedImage url={post.image} width={230} height={230} alt="post-image" resolutionsOverride={[230]} />
                     </div>
                 )}
             </div>

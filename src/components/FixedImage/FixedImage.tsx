@@ -5,7 +5,7 @@ import {
   useImageProvider,
 } from 'qwik-image';
 
-export interface SanityimageProps {
+export interface FixedImageProps {
   url: string,
   width?: number,
   height?: number,
@@ -15,11 +15,11 @@ export interface SanityimageProps {
   className?: string;
 }
 
-const Sanityimage = component$<SanityimageProps>(({ url, width, height, alt, resolutionsOverride, placeholderColor, className }) => {
+const FixedImage = component$<FixedImageProps>(({ url, width, height, alt, resolutionsOverride, placeholderColor, className }) => {
 
   const imageTransformer$ = $(
     ({ /*src,*/ width, height }: ImageTransformerProps): string => {
-      return url && `${url}?w=${width}&h=${height}&fit=crop&auto=format`;
+      return url && `${url}?fit=crop${width ? `&w=${width}` : ""}${height ? `&h=${height}` : ""}&auto=format`;
     }
   );
 
@@ -34,7 +34,7 @@ const Sanityimage = component$<SanityimageProps>(({ url, width, height, alt, res
 
   return !url ? null : (
     <Image
-      layout='fixed' // CAREFUL! SanityImage is only used for fixed layout images (non responsive)
+      layout='fixed' // CAREFUL! FixedImage is only used for fixed layout images (non responsive)
       objectFit='cover'
       width={width}
       height={height}
@@ -46,4 +46,4 @@ const Sanityimage = component$<SanityimageProps>(({ url, width, height, alt, res
 });
 
 
-export default Sanityimage;
+export default FixedImage;

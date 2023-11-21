@@ -3,7 +3,7 @@ import type { Event } from "~/contract";
 import MachHTitle from "../shared/machhtitle";
 import GreenBall from "../GreenBall";
 import { Link, useNavigate } from "@builder.io/qwik-city";
-import SanityImage from "../SanityImage/sanityimage";
+import FixedImage from "../FixedImage/FixedImage";
 import MachHButton from "../shared/machhbutton";
 
 interface Props {
@@ -51,7 +51,7 @@ const EventCard = component$<Props>(({ event, clickable, showDetail, noBottomBor
                         </div>
                     ) : (
                         <div class={`${event.image ? "" : "invisible"}`}>
-                            <SanityImage url={event.image} width={120} height={120} alt="event-image" resolutionsOverride={[120]} />
+                            <FixedImage url={event.image} width={120} height={120} alt="event-image" resolutionsOverride={[120]} />
                         </div>
                     )}
                 </div>
