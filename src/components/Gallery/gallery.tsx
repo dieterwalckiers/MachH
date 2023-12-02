@@ -1,16 +1,22 @@
-import { component$, useContext, useSignal, useVisibleTask$ } from "@builder.io/qwik";
-import FixedImage from "~/components/FixedImage/FixedImage";
+import { component$, useComputed$, useContext, useSignal, useVisibleTask$ } from "@builder.io/qwik";
+import type { Image } from "~/contract";
 import { MainContext } from "~/routes/layout";
 import { isMobile } from "~/util/rwd";
+import MachHImage from "../MachHImage";
 
 interface Props {
-    gallery?: any[];
+    images: Image[];
 }
-const Gallery = component$<Props>(({ gallery }) => {
+const Gallery = component$<Props>(({ images }) => {
 
     const detailVisible = useSignal<boolean>(false);
     const activeImgPos = useSignal<number>(0);
     const mainCtx = useContext(MainContext);
+
+    const activeImg = useComputed$(() => {
+        return images[activeImgPos.value];
+    });
+
 
     console.log("activeImgPos", activeImgPos.value);
 
@@ -27,7 +33,7 @@ const Gallery = component$<Props>(({ gallery }) => {
     return (
         <>
             <div class="flex mt-4 w-full flex-wrap">
-                {(gallery || []).map((photo, index) => (
+                {images.map((image, index) => (
                     <div
                         key={`galdivimg${index}`}
                         class="float-left mr-4 mb-4 cursor-pointer hover:outline hover:outline-4 hover:outline-mach-primary"
@@ -36,9 +42,9 @@ const Gallery = component$<Props>(({ gallery }) => {
                             detailVisible.value = true;
                         }}
                     >
-                        <FixedImage
-                            url={photo}
-                            alt={`gallery image ${index}`}
+                        <MachHImage
+                            image={image}
+                            alt={`images image ${index}`}
                             // eslint-disable-next-line qwik/no-react-props
                             width={90} height={90}
                             resolutionsOverride={[90]}
@@ -55,10 +61,10 @@ const Gallery = component$<Props>(({ gallery }) => {
                         }}
                     >
                         <div class="w-full md:w-[600px]">
-                            <FixedImage
-                                url={(gallery || [undefined])[activeImgPos.value]}
+                            <MachHImage
+                                image={activeImg.value}
                                 key={`galimg${activeImgPos.value}`}
-                                alt={`gallery image 0`}
+                                alt={`images image 0`}
                                 // eslint-disable-next-line qwik/no-react-props
                                 className="float-left mr-4 mb-4"
                                 width={isMobile(mainCtx.screenSize) ? 400 : 1200}
@@ -72,7 +78,7 @@ const Gallery = component$<Props>(({ gallery }) => {
                                         </svg>
                                     </div>
                                 ) : <div></div>}
-                                {activeImgPos.value < (gallery || []).length - 1 ? (
+                                {activeImgPos.value < images.length - 1 ? (
                                     <div class="right-button cursor-pointer" onClick$={(e) => { activeImgPos.value = activeImgPos.value + 1; e.stopPropagation(); }}>
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-white" viewBox="0 0 20 20" fill="currentColor">
                                             <path fill-rule="evenodd" d="M9.293 16.707a1 1 0 010-1.414L13.586 11H3a1 1 0 010-2h10.586l-4.293-4.293a1 1 0 111.414-1.414l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414 0z" clip-rule="evenodd" />

@@ -6,7 +6,7 @@ export function buildTiles(
     isMobile = false,
 ): Tile[] {
     const tiles: Tile[] = projects.map((project, i) => ({
-        backgroundImage: project.photo,
+        backgroundImageUrl: project.image?.url,
         caption: project.tileCaption,
         text: project.name,
         mobileTitle: i === 0 && isMobile ? "Onze projecten" : undefined,

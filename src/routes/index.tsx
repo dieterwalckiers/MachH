@@ -21,7 +21,7 @@ export const useLatestPost = routeLoader$(async () => {
 
 export default component$(() => {
     const nextThreeEventsSignal = useNextThreeEvents();
-    
+
     const latestPost = useLatestPost();
 
     const store = useStore<{ tiles: Tile[] }>({
@@ -40,12 +40,14 @@ export default component$(() => {
         track(() => [projects, latestPost, mainCtx.screenSize]);
     })
 
-    return nextThreeEventsSignal.value.length > 1 ? (
+    return (
         <>
-            <NextEvents events={nextThreeEventsSignal.value} />
+            {nextThreeEventsSignal.value.length > 0 && (
+                <NextEvents events={nextThreeEventsSignal.value} />
+            )}
             <HomepageTiles tiles={store.tiles} />
         </>
-    ) : null;
+    );
 });
 
 export const head: DocumentHead = {

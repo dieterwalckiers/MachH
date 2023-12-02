@@ -28,7 +28,7 @@ export type MainContextData = {
 export const MainContext = createContextId<MainContextData>("mainContext");
 
 export const useProjects = routeLoader$(async () => {
-    const projects = await sanityClient.fetch('*[_type == "project"]{..., "photo": photo.asset->url}|order(orderRank)');
+    const projects = await sanityClient.fetch('*[_type == "project"]{..., "photoUrl": photo.asset->url, "photoRef": photo.asset._ref}|order(orderRank)');
     return projects.map((p: any) => normalizeProject(p)) as Project[];
 })
 

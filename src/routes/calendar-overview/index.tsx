@@ -12,7 +12,7 @@ export const useEvents = routeLoader$(async (requestEvent: RequestEventLoader) =
   const year = parseInt(requestEvent.query.get("y") ?? `${new Date().getFullYear()}`);
   const monthIndex = parseInt(requestEvent.query.get("mI") ?? `${new Date().getMonth()}`);
   const { dateStrFrom, dateStrTo } = getFromTo(year, monthIndex);
-  const events = await sanityClient.fetch(`*[_type == "event" && date >= "${dateStrFrom}" && date <= "${dateStrTo}"]{date,time,place,price,title,slug,"image": image.asset->url,linkedProjects[]->{name, slug, hexColor}}`);
+  const events = await sanityClient.fetch(`*[_type == "event" && date >= "${dateStrFrom}" && date <= "${dateStrTo}"]{date,time,place,price,title,slug,"imageUrl": image.asset->url,"imageRef": image.asset._ref,linkedProjects[]->{name, slug, hexColor}}`);
   return {
     events: events.map((e: any) => normalizeEvent(e)),
     year,

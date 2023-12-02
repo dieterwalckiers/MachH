@@ -6,7 +6,7 @@ export interface Event {
     price?: string;
     slug: string;
     linkedProjects?: Project[],
-    image?: any, // TODO
+    image?: Image,
     description?: string;
     ctaHref?: string;
     ctaText?: string;
@@ -17,29 +17,35 @@ export interface AboutUs {
     body: string;
 }
 
+export interface Image {
+    url: string;
+    origWidth: number;
+    origHeight: number;
+}
+
 export interface Project {
     name: string,
     description: string,
     tileCaption?: string,
-    photo: any, // TODO
+    image?: Image,
+    galleryImages?: Image[],
     events: Event[],
     slug: string,
     hexColor?: string;
-    gallery: any[];
 }
 
 export interface Post {
     title: string,
     date: string,
     body: string,
-    image?: any, // TODO
+    image?: Image,
     linkedProjects?: Project[],
     ctaHref?: string,
     ctaText?: string,
 }
 
 export interface Tile {
-    backgroundImage?: string;
+    backgroundImageUrl?: string;
     caption?: string;
     text?: string;
     mobileTitle?: string;

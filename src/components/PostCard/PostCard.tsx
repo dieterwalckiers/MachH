@@ -1,9 +1,9 @@
 import MachHTitle from "../shared/machhtitle";
 import type { Post } from "~/contract";
-import FixedImage from "../FixedImage/FixedImage";
 import { component$ } from "@builder.io/qwik";
 import { Link } from "@builder.io/qwik-city";
 import MachHButton from "../shared/machhbutton";
+import MachHImage from "../MachHImage";
 
 interface Props {
     post: Post;
@@ -23,14 +23,21 @@ const PostCard = component$<Props>(({ post, noBottomBorder }) => {
                 {post.date}
             </div>
             <div class="flex flex-col-reverse md:flex-row text-justify">
-                <div class="font-semibold pr-0 pt-4 md:pr-4 md:pt-0">
+                <div class="font-semibold">
+                    {post.image && (
+                        <div class="min-w-fit float-none md:float-left mr-0 mb-4 md:mr-8">
+                            <MachHImage
+                                image={post.image}
+                                fit="fill"
+                                objectFit="contain"
+                                maxDim={460}
+                                alt="post-image"
+                                resolutionsOverride={[230, 460]}
+                            />
+                        </div>
+                    )}
                     {post.body}
                 </div>
-                {post.image && (
-                    <div class={`min-w-fit ${post.image ? "" : "hidden"}`}>
-                        <FixedImage url={post.image} width={230} height={230} alt="post-image" resolutionsOverride={[230]} />
-                    </div>
-                )}
             </div>
             <div class="flex mt-8 justify-between items-center uppercase font-semibold">
                 <div class="flex text-sm">

@@ -7,7 +7,7 @@ import MachHTitle from "~/components/shared/machhtitle";
 import { normalizeEvent } from "~/util/normalizing";
 
 export const useRouteInfo = routeLoader$(async (requestEvent: RequestEventLoader) => {
-    const [event] = await sanityClient.fetch(`*[_type == "event" && slug.current == "${requestEvent.params.slug}"]{..., "image": image.asset->url, linkedProjects[]->{name, slug, hexColor}}`);
+    const [event] = await sanityClient.fetch(`*[_type == "event" && slug.current == "${requestEvent.params.slug}"]{..., "imageUrl": image.asset->url,"imageRef": image.asset._ref, linkedProjects[]->{name, slug, hexColor}}`);
     return {
         event: normalizeEvent(event),
         source: requestEvent.query.get("s"),

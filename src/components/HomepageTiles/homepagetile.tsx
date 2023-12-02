@@ -12,11 +12,11 @@ export interface Props {
 const HomepageTile = component$<Props>(({
     tile
 }) => {
-    const { backgroundImage, caption, text } = tile;
+    const { backgroundImageUrl, caption, text } = tile;
     const mainCtx = useContext(MainContext);
     const backgroundImageBestFitUrl = isMobile(mainCtx.screenSize) ?
-        `${backgroundImage}?w=450&h=450&fit=crop&auto=format` :
-        `${backgroundImage}?w=245&h=245&fit=crop&auto=format`;
+        `${backgroundImageUrl}?w=450&h=450&fit=crop&auto=format` :
+        `${backgroundImageUrl}?w=245&h=245&fit=crop&auto=format`;
 
     return (
         <Link href={tile.href} class={`w-full md:w-1/3 mb-4 md:mb-[2rem] md:relative
@@ -33,7 +33,7 @@ const HomepageTile = component$<Props>(({
                     backgroundImage: `url(${backgroundImageBestFitUrl})`,
                     backgroundSize: 'cover',
                 }}
-                class={`aspect-square overflow-hidden relative ${backgroundImage ? "hover:opacity-80 transition-opacity duration-300 cursor-pointer" : ""}`}
+                class={`aspect-square overflow-hidden relative ${backgroundImageUrl ? "hover:opacity-80 transition-opacity duration-300 cursor-pointer" : ""}`}
             >
                 {
                     caption ? (
