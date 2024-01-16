@@ -1,7 +1,10 @@
 export interface Event {
     title: string,
-    date: string,
+    date: string, // 26/10/2023
+    dateNotation1: string; // DO 26 OKT
     time?: string;
+    endTime?: string;
+    timeNotation1?: string; // eg "20:00" or "20:00 - 22:00" in case of an end time
     place?: string;
     price?: string;
     slug: string;
