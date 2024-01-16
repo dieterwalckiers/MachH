@@ -4,6 +4,7 @@ import { component$ } from "@builder.io/qwik";
 import { Link } from "@builder.io/qwik-city";
 import MachHImage from "../MachHImage";
 import CallToActions from "../shared/calltoactions";
+import HtmlBlock from "../HtmlBlock/htmlblock";
 
 interface Props {
     post: Post;
@@ -36,7 +37,7 @@ const PostCard = component$<Props>(({ post, noBottomBorder }) => {
                             />
                         </div>
                     )}
-                    {post.body}
+                    <HtmlBlock value={post.bodyHtml} />
                 </div>
             </div>
             <div class="flex mt-8 justify-between items-center uppercase font-semibold">
