@@ -46,7 +46,7 @@ const HomepageTile = component$<Props>(({
                     ) : (textHtml ? (
                         <div class="cursor-pointer text-justify">
                             <label class="text-machh-primary font-bold cursor-pointer">
-                                <HtmlBlock value={textHtml} />
+                                <HtmlBlock value={textHtml} class="text-justify" />
                             </label>
                             <label class="absolute bottom-[-8px] right-0 fill-current text-machh-primary text-3xl font-black py-0 px-2 bg-white cursor-pointer">
                                 &#x2192;

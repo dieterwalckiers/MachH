@@ -37,10 +37,15 @@ export function normalizeEvent(event: any, skipLinkedProjects = false): Event {
         url: event.imageUrl,
         ...extractOrigDims(event.imageRef),
     };
+    const jsDate = new Date(y, m - 1, d);
+    const dayOfWeek = jsDate.toLocaleDateString('nl-NL', { weekday: 'short' });
+    const month = jsDate.toLocaleDateString('nl-NL', { month: 'short' });
     return {
         ...event,
         image,
         date: `${d}/${m}/${y}`,
+        dateNotation1: `${dayOfWeek} ${d} ${month}`.toUpperCase(),
+        timeNotation1: event.time ? `${event.time}${event.endTime ? ` - ${event.endTime}` : ""}` : "",
         slug: event.slug?.current,
         ...(!skipLinkedProjects ? { linkedProjects: event.linkedProjects?.map((p: any) => normalizeProject(p)) } : {}),
         descriptionHtml: event.description ?

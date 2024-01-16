@@ -42,8 +42,7 @@ const Project = component$(() => {
                     width={360} height={360}
                     resolutionsOverride={[360]}
                 />
-                {/* {project.description} */}
-                <HtmlBlock value={project.descriptionHtml} />
+                <HtmlBlock value={project.descriptionHtml} class="text-justify"/>
                 {project.callToActions?.length && (
                     <div class="flex justify-end">
                         <CallToActions callToActions={project.callToActions} />
