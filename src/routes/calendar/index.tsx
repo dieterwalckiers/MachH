@@ -10,6 +10,7 @@ import Calendar from "../../svg/calendar.svg?jsx";
 
 const EVENTS_ON_PAGE = 6;
 
+
 export const useEvents = routeLoader$(async (requestEvent: RequestEventLoader) => {
   const from = parseInt(requestEvent.query.get("from") ?? "0");
   const to = parseInt(requestEvent.query.get("to") ?? `${EVENTS_ON_PAGE}`);
