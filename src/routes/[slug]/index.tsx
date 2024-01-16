@@ -35,8 +35,8 @@ const Project = component$(() => {
                     alt={`${project.name} main image`}
                     // eslint-disable-next-line qwik/no-react-props
                     className="float-left mr-8 mb-4"
-                    width={180} height={180}
-                    resolutionsOverride={[180]}
+                    width={360} height={360}
+                    resolutionsOverride={[360]}
                 />
                 {project.description}
                 {project.callToActions?.length && (
