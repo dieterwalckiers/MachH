@@ -1,6 +1,6 @@
 import { component$ } from '@builder.io/qwik';
 import type { Event } from '../../contract';
-import GreenBall from '../GreenBall';
+import Ball from '../Ball';
 import { Link } from '@builder.io/qwik-city';
 
 export interface Props {
@@ -10,10 +10,12 @@ export interface Props {
 
 const EventTile = component$<Props>(({ event }) => {
 
+    const hexColor = event.linkedProjects?.[0]?.hexColor;
+
     return (
         <Link href={`/event/${event.slug}`} class="w-full flex" style={{ minWidth: "250px" }}>
             <div class="mr-6">
-                <GreenBall />
+                <Ball hexColor={hexColor} />
             </div>
             <div>
                 <label>{`${event.date}`}</label>
