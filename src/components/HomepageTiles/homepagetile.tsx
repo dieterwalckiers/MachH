@@ -4,6 +4,7 @@ import { Link } from "@builder.io/qwik-city";
 import MachHTitle from "../shared/machhtitle";
 import { MainContext } from "~/routes/layout";
 import { isMobile } from "~/util/rwd";
+import HtmlBlock from "../HtmlBlock/htmlblock";
 
 export interface Props {
     tile: Tile;
@@ -12,7 +13,7 @@ export interface Props {
 const HomepageTile = component$<Props>(({
     tile
 }) => {
-    const { backgroundImageUrl, caption, text } = tile;
+    const { backgroundImageUrl, caption, textHtml } = tile;
     const mainCtx = useContext(MainContext);
     const backgroundImageBestFitUrl = isMobile(mainCtx.screenSize) ?
         `${backgroundImageUrl}?w=450&h=450&fit=crop&auto=format` :
@@ -42,10 +43,10 @@ const HomepageTile = component$<Props>(({
                                 {caption.replace(" ", "\n")}
                             </label>
                         </div>
-                    ) : (text ? (
+                    ) : (textHtml ? (
                         <div class="cursor-pointer text-justify">
                             <label class="text-machh-primary font-bold cursor-pointer">
-                                {text}
+                                <HtmlBlock value={textHtml} />
                             </label>
                             <label class="absolute bottom-[-8px] right-0 fill-current text-machh-primary text-3xl font-black py-0 px-2 bg-white cursor-pointer">
                                 &#x2192;
