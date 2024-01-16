@@ -58,7 +58,7 @@ export default component$(() => {
     });
 
     return (
-        <div class="w-full flex flex-col py-4 items-center font-roboto text-xl">
+        <div class="w-full flex flex-col py-4 items-center font-roboto text-xxl md:text-xl">
             <div class="w-[calc(100vw-1rem)] md:w-[50rem] flex flex-col items-center">
                 <Header />
                 <MainMenu />
