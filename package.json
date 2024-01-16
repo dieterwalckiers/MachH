@@ -43,6 +43,7 @@
   },
   "dependencies": {
     "@sanity/client": "^6.4.9",
-    "qwik-image": "^0.0.8"
+    "qwik-image": "^0.0.8",
+    "@sanity/block-content-to-html": "^2.0.0"
   }
 }
