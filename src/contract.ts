@@ -8,8 +8,12 @@ export interface Event {
     linkedProjects?: Project[],
     image?: Image,
     description?: string;
-    ctaHref?: string;
-    ctaText?: string;
+    callToActions?: CallToAction[];
+}
+
+export interface CallToAction {
+    href: string;
+    text: string;
 }
 
 export interface AboutUs {
@@ -32,6 +36,7 @@ export interface Project {
     events: Event[],
     slug: string,
     hexColor?: string;
+    callToActions?: CallToAction[];
 }
 
 export interface Post {
@@ -40,8 +45,7 @@ export interface Post {
     body: string,
     image?: Image,
     linkedProjects?: Project[],
-    ctaHref?: string,
-    ctaText?: string,
+    callToActions?: CallToAction[];
 }
 
 export interface Tile {

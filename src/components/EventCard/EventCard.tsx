@@ -3,8 +3,8 @@ import type { Event } from "~/contract";
 import MachHTitle from "../shared/machhtitle";
 import GreenBall from "../GreenBall";
 import { Link, useNavigate } from "@builder.io/qwik-city";
-import MachHButton from "../shared/machhbutton";
 import MachHImage from "../MachHImage";
+import CallToActions from "../shared/calltoactions";
 
 interface Props {
     event: Event;
@@ -61,7 +61,7 @@ const EventCard = component$<Props>(({ event, clickable, showDetail, noBottomBor
                     <label class="mt-8">{event.description}</label>
                 </div>
             ) : null}
-            <div class="flex ml-[4.5rem] mt-8 justify-between items-center">
+            <div class="flex ml-[4.5rem] mt-8 justify-between items-top">
                 <div class="flex text-sm">
                     {event.linkedProjects?.map((project, i) => (
                         <Link href={`/${project.slug}`} key={`projlink${i}`}>
@@ -71,14 +71,9 @@ const EventCard = component$<Props>(({ event, clickable, showDetail, noBottomBor
                         </Link>
                     ))}
                 </div>
-                {event.ctaHref && event.ctaText ? (
-                    <MachHButton
-                        onClick$={() => { window.open(event.ctaHref!, '_blank'); }}
-                        class="text-sm"
-                    >
-                        <label class="pointer-events-none">{event.ctaText}</label>
-                    </MachHButton>
-                ) : null}
+                {event.callToActions?.length && (
+                    <CallToActions callToActions={event.callToActions} />
+                )}
             </div>
         </div >
     )
