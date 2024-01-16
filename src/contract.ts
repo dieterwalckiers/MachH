@@ -7,7 +7,7 @@ export interface Event {
     slug: string;
     linkedProjects?: Project[],
     image?: Image,
-    description?: string;
+    descriptionHtml?: string;
     callToActions?: CallToAction[];
 }
 
@@ -18,7 +18,7 @@ export interface CallToAction {
 
 export interface AboutUs {
     title: string;
-    body: string;
+    bodyHtml: string;
 }
 
 export interface Image {
@@ -29,7 +29,7 @@ export interface Image {
 
 export interface Project {
     name: string,
-    description: string,
+    descriptionHtml: string,
     tileCaption?: string,
     image?: Image,
     galleryImages?: Image[],
@@ -42,7 +42,7 @@ export interface Project {
 export interface Post {
     title: string,
     date: string,
-    body: string,
+    bodyHtml: string,
     image?: Image,
     linkedProjects?: Project[],
     callToActions?: CallToAction[];
