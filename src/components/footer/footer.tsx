@@ -19,7 +19,6 @@ const Footer = component$(() => {
             <label class="cursor-pointer">mach-h.be</label>
           </div>
         </Link>
-        <label>BTW: BE0777936832</label>
 
       </div>
       <div class="flex">
