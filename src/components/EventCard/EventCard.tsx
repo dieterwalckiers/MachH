@@ -31,14 +31,14 @@ const EventCard = component$<Props>(({ event, clickable, showDetail, noBottomBor
     return (
         <div
             class={`flex flex-col justify-between text-machh-primary
-                font-semibold text-lg ${noBottomBorder ? "" : "border-b-[3px] border-machh-primary"} ${showDetail ? "" : "md:h-64"} py-8`}
+                font-semibold text-lg ${noBottomBorder ? "" : "border-b-[3px] border-machh-primary"} ${showDetail ? "" : "md:h-56"} py-8`}
         >
             <div class="flex w-full flex-col md:flex-row">
                 <div class={`practicaldetails flex ${clickable ? "cursor-pointer" : ""} md:w-1/3`} onClick$={onClick}>
                     <Ball class="hidden md:block" hexColor={hexColor} />
                     <div class="flex flex-col pointer-events-none md:ml-12">
-                        <label>{event.dateNotation1}</label>
-                        <label>{event.timeNotation1}</label>
+                        <label>{event.date}</label>
+                        <label>{event.time}</label>
                         <label>{event.place}</label>
                         <label>{event.price}</label>
                     </div>
@@ -54,14 +54,14 @@ const EventCard = component$<Props>(({ event, clickable, showDetail, noBottomBor
                         </div>
                     ) : (
                         <div>
-                            <MachHImage image={event.image} width={155} height={155} alt="event-image" resolutionsOverride={[155]} />
+                            <MachHImage image={event.image} width={120} height={120} alt="event-image" resolutionsOverride={[120]} />
                         </div>
                     )}
                 </div>
             </div>
             {showDetail ? (
                 <div class="mt-8 md:pl-[5.5rem]">
-                    {event.descriptionHtml && <HtmlBlock value={event.descriptionHtml} class="text-justify" />}
+                    {event.descriptionHtml && <HtmlBlock value={event.descriptionHtml} />}
                 </div>
             ) : null}
             <div class="flex ml-[4.5rem] mt-8 justify-between items-top">

@@ -4,5 +4,5 @@ export default component$<{
     class?: string,
     hexColor?: string,
 }>(({ class: _class, hexColor }) => (
-    <div class={`w-[2.5rem] h-[2.5rem] min-w-[2.5rem] min-h-[2.5rem] max-w-[2.5rem] max-h-[2.5rem] rounded-full ${_class || ""}`} style={{ backgroundColor: hexColor || "#009548" }} />
+    <div class={`w-10 h-10 rounded-full ${_class || ""}`} style={{ backgroundColor: hexColor || "#009548" }} />
 ));
