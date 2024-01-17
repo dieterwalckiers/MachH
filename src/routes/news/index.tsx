@@ -14,7 +14,7 @@ export const usePosts = routeLoader$(async (requestEvent: RequestEventLoader) =>
   const to = parseInt(requestEvent.query.get("to") ?? `${POSTS_ON_PAGE}`);
   const fromMinusOne = Math.max(from - 1, 0);
   const toPlusOne = to + 1;
-  const rawPosts = await sanityClient.fetch(`*[_type == "post"]|order(date desc){title,date,body,slug,callToActions,ctaText,"imageUrl": image.asset->url,"imageRef": image.asset._ref,linkedProjects[]->{name, slug, hexColor}}[${fromMinusOne}...${toPlusOne}]`);
+  const rawPosts = await sanityClient.fetch(`*[_type == "post"]|order(date desc){title,date,body,slug,ctaHref,ctaText,"imageUrl": image.asset->url,"imageRef": image.asset._ref,linkedProjects[]->{name, slug, hexColor}}[${fromMinusOne}...${toPlusOne}]`);
   const posts = rawPosts.map((p: any) => normalizePost(p)) as Post[];
   let moreFurther;
   if (posts.length > (to - from)) {

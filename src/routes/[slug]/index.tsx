@@ -7,7 +7,6 @@ import MachHTitle from "~/components/shared/machhtitle";
 import { normalizeProject } from "~/util/normalizing";
 import { Project } from "~/contract";
 import MachHImage from "~/components/MachHImage";
-import CallToActions from "~/components/shared/calltoactions";
 
 export const useProject = routeLoader$(async (requestEvent: RequestEventLoader) => {
     const [project] = await sanityClient.fetch(`*[_type == "project" && slug.current == "${requestEvent.params.slug}"]{...,name,hexColor,"photoUrl": photo.asset->url,"photoRef": photo.asset._ref,description,"galleryPhotoUrls": gallery[].asset->url,"galleryPhotoRefs": gallery[].asset._ref}`);
@@ -39,11 +38,6 @@ const Project = component$(() => {
                     resolutionsOverride={[180]}
                 />
                 {project.description}
-                {project.callToActions?.length && (
-                    <div class="flex justify-end">
-                    <CallToActions callToActions={project.callToActions} />
-                    </div>
-                )}
                 <Gallery images={project.galleryImages || []} />
             </div>
         </div>

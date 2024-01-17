@@ -2,8 +2,8 @@ import MachHTitle from "../shared/machhtitle";
 import type { Post } from "~/contract";
 import { component$ } from "@builder.io/qwik";
 import { Link } from "@builder.io/qwik-city";
+import MachHButton from "../shared/machhbutton";
 import MachHImage from "../MachHImage";
-import CallToActions from "../shared/calltoactions";
 
 interface Props {
     post: Post;
@@ -49,9 +49,14 @@ const PostCard = component$<Props>(({ post, noBottomBorder }) => {
                         </Link>
                     ))}
                 </div>
-                {post.callToActions?.length && (
-                    <CallToActions callToActions={post.callToActions} />
-                )}
+                {post.ctaHref && post.ctaText ? (
+                    <MachHButton
+                        onClick$={() => { window.open(post.ctaHref!, '_blank'); }}
+                        class="text-sm"
+                    >
+                        <label class="pointer-events-none">{post.ctaText}</label>
+                    </MachHButton>
+                ) : null}
             </div>
         </div >
     )
