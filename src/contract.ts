@@ -51,7 +51,7 @@ export interface Post {
 export interface Tile {
     backgroundImageUrl?: string;
     caption?: string;
-    textHtml?: string;
+    text?: string;
     mobileTitle?: string;
     href?: string;
     mobileTitleId?: string;

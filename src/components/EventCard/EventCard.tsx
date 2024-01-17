@@ -1,7 +1,7 @@
 import { $, component$ } from "@builder.io/qwik";
 import type { Event } from "~/contract";
 import MachHTitle from "../shared/machhtitle";
-import Ball from "../Ball";
+import GreenBall from "../GreenBall";
 import { Link, useNavigate } from "@builder.io/qwik-city";
 import MachHImage from "../MachHImage";
 import CallToActions from "../shared/calltoactions";
@@ -33,7 +33,7 @@ const EventCard = component$<Props>(({ event, clickable, showDetail, noBottomBor
         >
             <div class="flex w-full flex-col md:flex-row">
                 <div class={`practicaldetails flex ${clickable ? "cursor-pointer" : ""} md:w-1/3`} onClick$={onClick}>
-                    <Ball class="hidden md:block" />
+                    <GreenBall class="hidden md:block" />
                     <div class="flex flex-col pointer-events-none md:ml-12">
                         <label>{event.date}</label>
                         <label>{event.time}</label>
