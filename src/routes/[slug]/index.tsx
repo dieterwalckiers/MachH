@@ -10,7 +10,6 @@ import MachHImage from "~/components/MachHImage";
 import CallToActions from "~/components/shared/calltoactions";
 import { isMobile } from "~/util/rwd";
 import { MainContext } from "../layout";
-import HtmlBlock from "~/components/HtmlBlock/htmlblock";
 
 export const useProject = routeLoader$(async (requestEvent: RequestEventLoader) => {
     const [project] = await sanityClient.fetch(`*[_type == "project" && slug.current == "${requestEvent.params.slug}"]{...,name,hexColor,"photoUrl": photo.asset->url,"photoRef": photo.asset._ref,description,"galleryPhotoUrls": gallery[].asset->url,"galleryPhotoRefs": gallery[].asset._ref}`);
@@ -42,8 +41,7 @@ const Project = component$(() => {
                     width={360} height={360}
                     resolutionsOverride={[360]}
                 />
-                {/* {project.description} */}
-                <HtmlBlock value={project.descriptionHtml} />
+                {project.description}
                 {project.callToActions?.length && (
                     <div class="flex justify-end">
                         <CallToActions callToActions={project.callToActions} />
