@@ -14,7 +14,7 @@ export function buildTiles(
         href: `/${project.slug}`,
     }));
     const latestPostTile = {
-        textHtml: latestPost.bodyHtml,
+        text: latestPost.body,
         mobileTitle: "Nieuws",
         href: "/news",
     } as Tile;
