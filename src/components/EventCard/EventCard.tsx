@@ -26,8 +26,6 @@ const EventCard = component$<Props>(({ event, clickable, showDetail, noBottomBor
         }
     });
 
-    const hexColor = event.linkedProjects?.[0]?.hexColor;
-
     return (
         <div
             class={`flex flex-col justify-between text-machh-primary
@@ -35,7 +33,7 @@ const EventCard = component$<Props>(({ event, clickable, showDetail, noBottomBor
         >
             <div class="flex w-full flex-col md:flex-row">
                 <div class={`practicaldetails flex ${clickable ? "cursor-pointer" : ""} md:w-1/3`} onClick$={onClick}>
-                    <Ball class="hidden md:block" hexColor={hexColor} />
+                    <Ball class="hidden md:block" />
                     <div class="flex flex-col pointer-events-none md:ml-12">
                         <label>{event.date}</label>
                         <label>{event.time}</label>
