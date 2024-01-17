@@ -1,4 +1,4 @@
-import { component$, useContext } from "@builder.io/qwik";
+import { component$ } from "@builder.io/qwik";
 import type { RequestEventLoader } from "@builder.io/qwik-city";
 import { routeLoader$ } from "@builder.io/qwik-city";
 import sanityClient from "~/cms/sanityClient";
@@ -8,8 +8,6 @@ import { normalizeProject } from "~/util/normalizing";
 import { Project } from "~/contract";
 import MachHImage from "~/components/MachHImage";
 import CallToActions from "~/components/shared/calltoactions";
-import { isMobile } from "~/util/rwd";
-import { MainContext } from "../layout";
 
 export const useProject = routeLoader$(async (requestEvent: RequestEventLoader) => {
     const [project] = await sanityClient.fetch(`*[_type == "project" && slug.current == "${requestEvent.params.slug}"]{...,name,hexColor,"photoUrl": photo.asset->url,"photoRef": photo.asset._ref,description,"galleryPhotoUrls": gallery[].asset->url,"galleryPhotoRefs": gallery[].asset._ref}`);
@@ -19,7 +17,6 @@ export const useProject = routeLoader$(async (requestEvent: RequestEventLoader) 
 const Project = component$(() => {
     const projectSignal = useProject();
     const project = projectSignal.value as Project | undefined;
-    const mainCtx = useContext(MainContext);
 
     if (!project) {
         return null;
@@ -29,7 +26,7 @@ const Project = component$(() => {
         <div class="w-full">
             <div class="header flex items-center justify-between w-full py-8 border-b-[3px] border-machh-primary">
                 <MachHTitle size="text-6xl" style={project.hexColor ? { color: project.hexColor } : {}}>
-                    {isMobile(mainCtx.screenSize) ? project.tileCaption : project.name}
+                    {project.name}
                 </MachHTitle>
             </div>
             <div class="textContainer w-full py-8 text-machh-primary text-justify">
@@ -44,7 +41,7 @@ const Project = component$(() => {
                 {project.description}
                 {project.callToActions?.length && (
                     <div class="flex justify-end">
-                        <CallToActions callToActions={project.callToActions} />
+                    <CallToActions callToActions={project.callToActions} />
                     </div>
                 )}
                 <Gallery images={project.galleryImages || []} />
