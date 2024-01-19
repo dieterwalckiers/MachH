@@ -54,7 +54,14 @@ const EventCard = component$<Props>(({ event, clickable, showDetail, noBottomBor
                         </div>
                     ) : (
                         <div>
-                            <MachHImage image={event.image} width={155} height={155} alt="event-image" resolutionsOverride={[155]} />
+                            <MachHImage
+                                image={event.image}
+                                // width={155}
+                                // height={155}
+                                maxDim={155}
+                                alt="event-image"
+                                resolutionsOverride={[155]}
+                            />
                         </div>
                     )}
                 </div>

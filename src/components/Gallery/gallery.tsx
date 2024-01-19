@@ -46,7 +46,8 @@ const Gallery = component$<Props>(({ images }) => {
                             image={image}
                             alt={`images image ${index}`}
                             // eslint-disable-next-line qwik/no-react-props
-                            width={90} height={90}
+                            // width={90} height={90}
+                            maxDim={90}
                             resolutionsOverride={[90]}
                         />
                     </div>
@@ -67,7 +68,9 @@ const Gallery = component$<Props>(({ images }) => {
                                 alt={`images image 0`}
                                 // eslint-disable-next-line qwik/no-react-props
                                 className="float-left mr-4 mb-4"
-                                width={isMobile(mainCtx.screenSize) ? 400 : 1200}
+                                // width={isMobile(mainCtx.screenSize) ? 400 : 1200}
+                                maxDim={isMobile(mainCtx.screenSize) ? 400 : 1200}
+                                objectFit="contain"
                                 resolutionsOverride={[400, 1200]}
                             />
                             <div class="flex justify-between w-full">

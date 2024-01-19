@@ -47,7 +47,7 @@ const SanityImage = component$<SanityImageProps>((props) => {
 
   const imageTransformer$ = $(
     ({ /*src,*/ width, height }: ImageTransformerProps): string => {
-      return `${props.image.url}?fit=${props.fit || "crop"}${width ? `&w=${Math.round(width)}` : ""}${height ? `&h=${Math.round(height)}` : ""}${props.maxDim ? `&max-w=${props.maxDim}&maxh=${props.maxDim}` : ""}&auto=format`;
+      return `${props.image.url}?fit=${props.fit || "fill"}${width ? `&w=${Math.round(width)}` : ""}${height ? `&h=${Math.round(height)}` : ""}${props.maxDim ? `&max-w=${props.maxDim}&maxh=${props.maxDim}` : ""}&auto=format`;
     }
   );
 
@@ -61,7 +61,7 @@ const SanityImage = component$<SanityImageProps>((props) => {
 
   return (store.width || store.height) ? (
     <Image
-      layout={props.layout || 'fixed'} // Note: default is "fixed", which produces an fixed with fixed, non-responsive resolution
+      layout={props.layout || 'fixed'} // Note: default is "fixed", which produces an image with fixed, non-responsive resolution
       objectFit={props.objectFit || "cover"}
       width={store.width}
       height={store.height}

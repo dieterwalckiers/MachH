@@ -39,7 +39,8 @@ const Project = component$(() => {
                     alt={`${project.name} main image`}
                     // eslint-disable-next-line qwik/no-react-props
                     className="float-left mr-8 mb-4"
-                    width={360} height={360}
+                    // width={360} height={360}
+                    maxDim={360}
                     resolutionsOverride={[360]}
                 />
                 <HtmlBlock value={project.descriptionHtml} class="text-justify"/>
