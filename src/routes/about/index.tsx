@@ -1,7 +1,6 @@
 import { component$ } from '@builder.io/qwik';
 import { routeLoader$ } from '@builder.io/qwik-city';
 import sanityClient from '~/cms/sanityClient';
-import HtmlBlock from '~/components/HtmlBlock/htmlblock';
 import MachHTitle from '~/components/shared/machhtitle';
 import type { AboutUs } from '~/contract';
 import { normalizeAboutUs } from '~/util/normalizing';
@@ -21,7 +20,7 @@ export default component$(() => {
                 </MachHTitle>
             </div>
             <div class="w-full flex justify-center py-12 text-machh-primary text-justify">
-                <HtmlBlock value={aboutUs.value.bodyHtml} />
+                {aboutUs.value.body}
             </div>
         </div>
     );

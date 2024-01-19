@@ -5,7 +5,6 @@ import GreenBall from "../GreenBall";
 import { Link, useNavigate } from "@builder.io/qwik-city";
 import MachHImage from "../MachHImage";
 import CallToActions from "../shared/calltoactions";
-import HtmlBlock from "../HtmlBlock/htmlblock";
 
 interface Props {
     event: Event;
@@ -59,7 +58,7 @@ const EventCard = component$<Props>(({ event, clickable, showDetail, noBottomBor
             </div>
             {showDetail ? (
                 <div class="mt-8 md:pl-[5.5rem]">
-                    {event.descriptionHtml && <HtmlBlock value={event.descriptionHtml} />}
+                    <label class="mt-8">{event.description}</label>
                 </div>
             ) : null}
             <div class="flex ml-[4.5rem] mt-8 justify-between items-top">
