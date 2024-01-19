@@ -1,4 +1,4 @@
-import blocksToHtml from "@sanity/block-content-to-html";
+import { toHTML } from "@portabletext/to-html";
 import type { AboutUs, Event, Post, Project } from "~/contract";
 
 type AssetInfo = {
@@ -44,9 +44,7 @@ export function normalizeEvent(event: any, skipLinkedProjects = false): Event {
         slug: event.slug?.current,
         ...(!skipLinkedProjects ? { linkedProjects: event.linkedProjects?.map((p: any) => normalizeProject(p)) } : {}),
         descriptionHtml: event.description ?
-            blocksToHtml({
-                blocks: event.description,
-            }) :
+            toHTML(event.description) :
             "",
     }
 }
@@ -62,6 +60,9 @@ export function normalizePost(post: any, skipLinkedProjects = false): Post {
         image,
         date: `${d}/${m}/${y}`,
         ...(!skipLinkedProjects ? { linkedProjects: post.linkedProjects?.map((p: any) => normalizeProject(p)) } : {}),
+        bodyHtml: post.body ?
+            toHTML(post.body) :
+            "",
     }
 }
 
@@ -81,11 +82,17 @@ export function normalizeProject(project: any): Project {
         image,
         galleryImages,
         slug: project.slug?.current,
+        descriptionHtml: project.description ?
+            toHTML(project.description) :
+            "",
     }
 }
 
 export function normalizeAboutUs(aboutUs: any): AboutUs {
     return {
         ...aboutUs,
+        bodyHtml: aboutUs.body ?
+            toHTML(aboutUs.body) :
+            "",
     }
 }

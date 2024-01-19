@@ -4,6 +4,7 @@ import { Link } from "@builder.io/qwik-city";
 import MachHTitle from "../shared/machhtitle";
 import { MainContext } from "~/routes/layout";
 import { isMobile } from "~/util/rwd";
+import HtmlBlock from "../HtmlBlock/htmlblock";
 
 export interface Props {
     tile: Tile;
@@ -45,7 +46,7 @@ const HomepageTile = component$<Props>(({
                     ) : (text ? (
                         <div class="cursor-pointer text-justify">
                             <label class="text-machh-primary font-bold cursor-pointer">
-                                {text}
+                                <HtmlBlock value={text} />
                             </label>
                             <label class="absolute bottom-[-8px] right-0 fill-current text-machh-primary text-3xl font-black py-0 px-2 bg-white cursor-pointer">
                                 &#x2192;
