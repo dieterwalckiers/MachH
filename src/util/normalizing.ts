@@ -1,4 +1,4 @@
-
+import blocksToHtml from "@sanity/block-content-to-html";
 import type { AboutUs, Event, Post, Project } from "~/contract";
 
 type AssetInfo = {
