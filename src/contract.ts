@@ -19,10 +19,13 @@ export interface CallToAction {
     text: string;
 }
 
-export interface AboutUs {
+export interface PlainOldTitleAndBody {
     title: string;
     bodyHtml: string;
 }
+
+export type AboutUs = PlainOldTitleAndBody;
+export type PrivacyPolicy = PlainOldTitleAndBody;
 
 export interface Image {
     url: string;

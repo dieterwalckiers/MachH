@@ -1,5 +1,5 @@
-import { toHTML } from "@portabletext/to-html";
-import type { AboutUs, Event, Post, Project } from "~/contract";
+import type { AboutUs, Event, PlainOldTitleAndBody, Post, PrivacyPolicy, Project } from "~/contract";
+import { toHTML } from "./portableText";
 
 type AssetInfo = {
     assetId: string;
@@ -48,9 +48,7 @@ export function normalizeEvent(event: any, skipLinkedProjects = false): Event {
         timeNotation1: event.time ? `${event.time}${event.endTime ? ` - ${event.endTime}` : ""}` : "",
         slug: event.slug?.current,
         ...(!skipLinkedProjects ? { linkedProjects: event.linkedProjects?.map((p: any) => normalizeProject(p)) } : {}),
-        descriptionHtml: event.description ?
-            toHTML(event.description) :
-            "",
+        descriptionHtml: toHTML(event.description),
     }
 }
 
@@ -65,9 +63,7 @@ export function normalizePost(post: any, skipLinkedProjects = false): Post {
         image,
         date: `${d}/${m}/${y}`,
         ...(!skipLinkedProjects ? { linkedProjects: post.linkedProjects?.map((p: any) => normalizeProject(p)) } : {}),
-        bodyHtml: post.body ?
-            toHTML(post.body) :
-            "",
+        bodyHtml: toHTML(post.body),
     }
 }
 
@@ -87,17 +83,22 @@ export function normalizeProject(project: any): Project {
         image,
         galleryImages,
         slug: project.slug?.current,
-        descriptionHtml: project.description ?
-            toHTML(project.description) :
-            "",
+        descriptionHtml: toHTML(project.description),
     }
 }
 
-export function normalizeAboutUs(aboutUs: any): AboutUs {
+function normalizePlainOldTitleAndBody<T extends PlainOldTitleAndBody>(thang: any): T {
     return {
-        ...aboutUs,
-        bodyHtml: aboutUs.body ?
-            toHTML(aboutUs.body) :
-            "",
+        ...thang,
+        bodyHtml: toHTML(thang.body),
     }
 }
+
+export function normalizeAboutUs(aboutUs: unknown): AboutUs {
+    return normalizePlainOldTitleAndBody<AboutUs>(aboutUs);
+}
+
+export function normalizePrivacyPolicy(privacyPolicy: unknown): PrivacyPolicy {
+    return normalizePlainOldTitleAndBody<PrivacyPolicy>(privacyPolicy);
+}
+
