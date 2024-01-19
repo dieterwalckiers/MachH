@@ -43,6 +43,11 @@ export function normalizeEvent(event: any, skipLinkedProjects = false): Event {
         date: `${d}/${m}/${y}`,
         slug: event.slug?.current,
         ...(!skipLinkedProjects ? { linkedProjects: event.linkedProjects?.map((p: any) => normalizeProject(p)) } : {}),
+        descriptionHtml: event.description ?
+            blocksToHtml({
+                blocks: event.description,
+            }) :
+            "",
     }
 }
 
