@@ -27,7 +27,7 @@ const Project = component$(() => {
     }
 
     return (
-        <div class="w-full">
+        <div class="w-full" key={`project${project.slug}`}>
             <div class="header flex items-center justify-between w-full py-8 border-b-[3px] border-machh-primary">
                 <MachHTitle size="text-6xl" style={project.hexColor ? { color: project.hexColor } : {}}>
                     {isMobile(mainCtx.screenSize) ? project.tileCaption : project.name}
@@ -43,7 +43,7 @@ const Project = component$(() => {
                     maxDim={360}
                     resolutionsOverride={[360]}
                 />
-                <HtmlBlock value={project.descriptionHtml} class="text-justify"/>
+                <HtmlBlock value={project.descriptionHtml} class="text-justify" />
                 {project.callToActions?.length && (
                     <div class="flex justify-end">
                         <CallToActions callToActions={project.callToActions} />
