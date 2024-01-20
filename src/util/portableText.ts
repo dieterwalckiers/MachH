@@ -19,6 +19,7 @@ export function toPlainText(blocks: any[] = []): string {
 
 // This reverts the heading resets that tailwind does, for the rich text coming from the CMS
 const revertHeadingStyleAttr = `style="font-size: revert; margin: revert; font-weight: revert;"`;
+const revertPStyleAttr = `style="margin: revert;"`;
 
 export function toHTML(blocks: any[] | undefined): string {
     if (!blocks) return "";
@@ -39,7 +40,7 @@ export function toHTML(blocks: any[] | undefined): string {
                     case "h6":
                         return `<h6 ${revertHeadingStyleAttr}>${props.children}</h6>`
                     default:
-                        return props.children;
+                        return `<p ${revertPStyleAttr}>${props.children}</p>`
                 }
             },
             // image: (props: any) => {
