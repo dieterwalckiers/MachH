@@ -47,8 +47,8 @@ const Gallery = component$<Props>(({ images }) => {
                             alt={`images image ${index}`}
                             // eslint-disable-next-line qwik/no-react-props
                             // width={90} height={90}
-                            maxDim={90}
-                            resolutionsOverride={[90]}
+                            maxDim={140}
+                            resolutionsOverride={[140]}
                         />
                     </div>
                 ))}
