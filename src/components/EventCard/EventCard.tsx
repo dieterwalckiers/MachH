@@ -32,6 +32,7 @@ const EventCard = component$<Props>(({ event, clickable, showDetail, noBottomBor
         <div
             class={`flex flex-col justify-between text-machh-primary
                 font-semibold text-lg ${noBottomBorder ? "" : "border-b-[3px] border-machh-primary"} ${showDetail ? "" : "md:h-64"} py-8`}
+            key={`event${event.slug}`}
         >
             <div class="flex w-full flex-col md:flex-row">
                 <div class={`practicaldetails flex ${clickable ? "cursor-pointer" : ""} md:w-1/3`} onClick$={onClick}>
