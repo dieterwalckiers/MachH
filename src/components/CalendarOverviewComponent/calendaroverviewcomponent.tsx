@@ -45,6 +45,20 @@ export const Calendaroverviewcomponent = component$<CalendaroverviewcomponentPro
     return new Date();
   });
 
+  /*
+    The calendar grid is 7 columns wide, one for each day of the week
+    Columns start at monday
+    so we need some "dummy" days to fill up the grid before the first day of the month
+  */
+  const fillerOffset = useComputed$(() => {
+    const d = new Date(`${year}-${monthIndex + 1}-1`);
+    const sundayBasedDay = d.getDay();
+    if (sundayBasedDay === 0) {
+      return 7;
+    }
+    return sundayBasedDay;
+  });
+
   return (
     <div class="relative">
       <div class={`wrapper bg-white outline outline-machh-primary w-full my-8 text-machh-primary`}>
@@ -82,10 +96,16 @@ export const Calendaroverviewcomponent = component$<CalendaroverviewcomponentPro
         </div>
 
         <div class="flex flex-wrap">
-          {Array.from({ length: getMonths(year)[monthIndex].nrDays - 1 }, (_, i) => i + 1).map((day, i) => {
+          {Array.from({
+            length: fillerOffset.value + getMonths(year)[monthIndex].nrDays - 1
+          }, (_, i) => i + 1).map((arrayPos, i) => {
+
             // console.log("D", day, "vs", today.value.getDate());
             // console.log("M", monthIndex, "vs", today.value.getMonth());
             // console.log("Y", year, "vs", today.value.getFullYear());
+
+            const day = arrayPos - fillerOffset.value;
+
             return (
               <CalendarDay
                 events={events.filter(e => e.date === buildDateLabel(year, monthIndex + 1, day + 1))}

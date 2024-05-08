@@ -29,7 +29,7 @@ const CalendarDay = component$<CalendarDayProps>(({ dayLbl, noRightBorder, event
     return (
         <div class={`w-[14.2857143%] border-b ${noRightBorder ? "" : "border-r "} aspect-square ${isToday ? "outline outline-4 outline-machh-greenaccent" : ""}`}>
             <div class="w-full text-center text-gray-400 text-sm font-semibold mt-2">
-                {dayLbl}
+                {dayLbl <= 0 ? "" : dayLbl} {/* "filler" days are negative (days before the first) */}
             </div>
             <div class="eventslist text-xs p-1">
                 {sortedEvents.map((event, i) => (
