@@ -7,7 +7,6 @@ import MachHImage from "../MachHImage";
 import CallToActions from "../shared/calltoactions";
 import HtmlBlock from "../HtmlBlock/htmlblock";
 import MachHButton from "../shared/machhbutton";
-import SubscriptionModal from "../SubscriptionModal/SubscriptionModal";
 
 interface Props {
     event: Event;
@@ -104,7 +103,6 @@ const EventCard = component$<Props>(({ event, clickable, showDetail, noBottomBor
                         <CallToActions callToActions={event.callToActions} />
                     )}
                 </div>
-                <SubscriptionModal isOpenSignal={subscriptionFormVisible} />
             </div>
         </div >
     )
