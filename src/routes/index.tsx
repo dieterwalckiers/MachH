@@ -6,23 +6,15 @@ import HomepageTiles from "~/components/HomepageTiles/homepagetiles"
 import type { Event, Tile } from "../contract";
 import { buildTiles } from "~/util/tiles";
 import { MainContext } from "./layout";
-import { isMobile } from "~/util/rwd";
-import { normalizeEvent, normalizePost } from "~/util/normalizing";
+import { normalizeEvent } from "~/util/normalizing";
 
 export const useNextThreeEvents = routeLoader$(async () => {
     const nextThreeEvents = await sanityClient.fetch('*[_type == "event" && date > now()]|order(date asc){date,time,place,price,title,slug,linkedProjects[]->{name, slug, hexColor}}[0..2]');
     return nextThreeEvents.map((e: any) => normalizeEvent(e)) as Event[];
 });
 
-export const useLatestPost = routeLoader$(async () => {
-    const latestPost = await sanityClient.fetch('*[_type == "post"]|order(date desc)[0]');
-    return normalizePost(latestPost);
-})
-
 export default component$(() => {
     const nextThreeEventsSignal = useNextThreeEvents();
-
-    const latestPost = useLatestPost();
 
     const store = useStore<{ tiles: Tile[] }>({
         tiles: [],
@@ -35,9 +27,9 @@ export default component$(() => {
         if (!projects) {
             return;
         }
-        const tiles = buildTiles(projects, latestPost.value, isMobile(mainCtx.screenSize));
+        const tiles = buildTiles(projects);
         store.tiles = tiles;
-        track(() => [projects, latestPost, mainCtx.screenSize]);
+        track(() => [projects, mainCtx.screenSize]);
     })
 
     return (

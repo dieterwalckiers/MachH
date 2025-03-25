@@ -5,8 +5,13 @@ import Stamp from '~/img/logo_mach_h_def_stamp.png?jsx'
 import useCloseOnOutsideClick from '~/util/useCloseOnOutsideClick';
 import { MainContext } from '~/routes/layout';
 import { isMobile } from '~/util/rwd';
+import type { Settings } from '~/contract';
 
-const MainMenu = component$(() => {
+type Props = {
+    settings: Settings;
+}
+
+const MainMenu = component$<Props>(({ settings }) => {
     const { menu } = useContent();
     const { url } = useLocation();
 
@@ -133,6 +138,18 @@ const MainMenu = component$(() => {
                                 )
                             }
 
+                            if (settings.isLinkToNewsPageInMenu && i === menu.items!.length - 1) {
+                                reduced.push(
+                                    <h5
+                                        class={`mt-4 ml-4 mr-4 md:mt-0 md:mr-0 md:ml-12 ${url.pathname === "/news" ? "underline underline-offset-8" : ""}`}
+                                        key="/news"
+                                    >
+                                        <Link href="/news" onClick$={() => mainCtx.showMobileMenu = false}>
+                                            Nieuws
+                                        </Link>
+                                    </h5>
+                                )
+                            }
                             return reduced;
                         }, [] as JSXChildren[])
                         : null}

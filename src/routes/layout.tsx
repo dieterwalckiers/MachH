@@ -32,6 +32,11 @@ export const useProjects = routeLoader$(async () => {
     return projects.map((p: any) => normalizeProject(p)) as Project[];
 })
 
+export const useSettings = routeLoader$(async () => {
+    const settings = await sanityClient.fetch('*[_type == "settings"][0]');
+    return settings;
+})
+
 export default component$(() => {
 
     const store = useStore<MainContextData>({
@@ -40,6 +45,8 @@ export default component$(() => {
     });
 
     const projects = useProjects(); // fetch projects here, so we can use them in multiple places (main menu + homepage tiles)
+    const settings = useSettings();
+
     useTask$(({ track }) => {
         store.projects = projects.value;
         track(() => [projects]);
@@ -60,8 +67,8 @@ export default component$(() => {
     return (
         <div class="w-full flex flex-col py-4 items-center font-roboto text-xxl md:text-xl">
             <div class="w-[calc(100vw-1rem)] md:w-[50rem] flex flex-col items-center">
-                <Header />
-                <MainMenu />
+                <Header settings={settings.value} />
+                <MainMenu settings={settings.value} />
                 <Slot />
                 <Footer />
             </div>

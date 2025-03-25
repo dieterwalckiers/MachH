@@ -5,7 +5,7 @@ import sanityClient from "~/cms/sanityClient";
 import Gallery from "~/components/Gallery/gallery";
 import MachHTitle from "~/components/shared/machhtitle";
 import { normalizeProject } from "~/util/normalizing";
-import { Project } from "~/contract";
+import type { Project } from "~/contract";
 import MachHImage from "~/components/MachHImage";
 import CallToActions from "~/components/shared/calltoactions";
 import { isMobile } from "~/util/rwd";
@@ -17,7 +17,7 @@ export const useProject = routeLoader$(async (requestEvent: RequestEventLoader) 
     return project && normalizeProject(project);
 })
 
-const Project = component$(() => {
+const ProjectComponent = component$(() => {
     const projectSignal = useProject();
     const project = projectSignal.value as Project | undefined;
     const mainCtx = useContext(MainContext);
@@ -55,4 +55,4 @@ const Project = component$(() => {
     )
 })
 
-export default Project;
+export default ProjectComponent;

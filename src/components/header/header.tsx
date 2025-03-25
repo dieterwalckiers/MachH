@@ -1,13 +1,19 @@
 import { component$ } from '@builder.io/qwik';
-import Banner from '~/components/header/ws_machh_banner.svg?jsx'
+import Banner from '~/components/header/banner.svg?jsx'
+import type { Settings } from '~/contract';
 
+type Props = {
+    settings: Settings;
+}
 
-const Header = component$(() => {
-  return (
-    <div class="text-machh-primary w-full mb-4">
-      <Banner />
-    </div>
-  );
+const Header = component$<Props>(({ settings }) => {
+    console.log("tagline", settings.tagline);
+    return (
+        <div class="text-machh-primary w-full mb-4 flex flex-col items-center text-2xl">
+            <label class="font-black">{settings.tagline}</label>
+            <Banner />
+        </div>
+    );
 });
 
 export default Header;

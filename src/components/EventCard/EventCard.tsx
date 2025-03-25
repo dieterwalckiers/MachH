@@ -1,4 +1,4 @@
-import { $, component$ } from "@builder.io/qwik";
+import { $, component$, useSignal } from "@builder.io/qwik";
 import type { Event } from "~/contract";
 import MachHTitle from "../shared/machhtitle";
 import Ball from "../Ball";
@@ -6,6 +6,8 @@ import { Link, useNavigate } from "@builder.io/qwik-city";
 import MachHImage from "../MachHImage";
 import CallToActions from "../shared/calltoactions";
 import HtmlBlock from "../HtmlBlock/htmlblock";
+import MachHButton from "../shared/machhbutton";
+import SubscriptionModal from "../SubscriptionModal/SubscriptionModal";
 
 interface Props {
     event: Event;
@@ -27,6 +29,9 @@ const EventCard = component$<Props>(({ event, clickable, showDetail, noBottomBor
     });
 
     const hexColor = event.linkedProjects?.[0]?.hexColor;
+
+    const subscriptionFormVisible = useSignal(false)
+
 
     return (
         <div
@@ -82,9 +87,24 @@ const EventCard = component$<Props>(({ event, clickable, showDetail, noBottomBor
                         </Link>
                     ))}
                 </div>
-                {event.callToActions?.length && (
-                    <CallToActions callToActions={event.callToActions} />
-                )}
+                <div class="flex flex-col">
+                    {event.subscribable && (
+                        <MachHButton
+                            onClick$={() => {
+                                subscriptionFormVisible.value = true;
+                            }}
+                            class="text-sm mt-2"
+                        >
+                            <label class="pointer-events-none">
+                                Schrijf je in
+                            </label>
+                        </MachHButton>
+                    )}
+                    {event.callToActions?.length && (
+                        <CallToActions callToActions={event.callToActions} />
+                    )}
+                </div>
+                <SubscriptionModal isOpenSignal={subscriptionFormVisible} />
             </div>
         </div >
     )

@@ -1,7 +1,6 @@
 import type { Tile } from "~/contract";
 import { component$, useContext } from "@builder.io/qwik";
 import { Link } from "@builder.io/qwik-city";
-import MachHTitle from "../shared/machhtitle";
 import { MainContext } from "~/routes/layout";
 import { isMobile } from "~/util/rwd";
 import HtmlBlock from "../HtmlBlock/htmlblock";
@@ -24,11 +23,6 @@ const HomepageTile = component$<Props>(({
             md:[&:nth-child(3n)]:left-[2rem]
             md:[&:nth-child(3n+1)]:right-[2rem]
             `}>
-            {tile.mobileTitle && (
-                <MachHTitle class="block md:hidden my-8" id={tile.mobileTitleId}>
-                    {tile.mobileTitle}
-                </MachHTitle>
-            )}
             <div
                 style={{
                     backgroundImage: `url(${backgroundImageBestFitUrl})`,

@@ -12,6 +12,9 @@ export interface Event {
     image?: Image,
     descriptionHtml?: string;
     callToActions?: CallToAction[];
+    subscribable?: boolean;
+    subscriptionMaxParticipants?: number;
+    subscriptionIsPaid?: boolean;
 }
 
 export interface CallToAction {
@@ -43,6 +46,7 @@ export interface Project {
     slug: string,
     hexColor?: string;
     callToActions?: CallToAction[];
+    isFocused?: boolean;
 }
 
 export interface Post {
@@ -58,8 +62,11 @@ export interface Tile {
     backgroundImageUrl?: string;
     caption?: string;
     textHtml?: string;
-    mobileTitle?: string;
     href?: string;
-    mobileTitleId?: string;
+    isFocused?: boolean;
 }
 
+export interface Settings {
+    tagline: string;
+    isLinkToNewsPageInMenu: boolean;
+}
