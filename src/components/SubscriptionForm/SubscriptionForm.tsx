@@ -29,6 +29,7 @@ const SubscriptionForm = component$<Props>(({ event, subscribeAction }) => {
                         type="email"
                         placeholder="email"
                     />
+                    <input type="hidden" name="eventSlug" value={event.slug} />
                     <div class="flex justify-end">
                         <MachHButton type="submit">
                             Inschrijven
