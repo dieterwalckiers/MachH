@@ -28,7 +28,7 @@ const Footer = component$(() => {
             <FacebookLogo alt="Facebook" style={{ width: "60px", height: "60px" }} />
           </Link>
           <Link href="https://instagram.com/mach_h_gent" class="cursor-pointer" target="_blank">
-            <InstagramLogo class="dimsixty" style={{ width: "60px", height: "60px " }} />
+            <InstagramLogo class="dimsixty" alt="Instagram" style={{ width: "60px", height: "60px " }} />
           </Link>
         </div>
         <Link href="/privacy" >

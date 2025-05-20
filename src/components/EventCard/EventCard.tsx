@@ -2,8 +2,7 @@ import { $, component$, useSignal, useTask$ } from "@builder.io/qwik";
 import type { Event } from "~/contract";
 import MachHTitle from "../shared/machhtitle";
 import Ball from "../Ball";
-import type { ActionStore} from "@builder.io/qwik-city";
-import { Link, useNavigate } from "@builder.io/qwik-city";
+import { ActionStore, Link, useNavigate } from "@builder.io/qwik-city";
 import MachHImage from "../MachHImage";
 import CallToActions from "../shared/calltoactions";
 import HtmlBlock from "../HtmlBlock/htmlblock";
@@ -20,7 +19,7 @@ interface Props {
     noBottomBorder?: boolean;
     from?: number;
     to?: number;
-    subscribeAction?: ActionStore<any, any>;
+    subscribeAction: ActionStore<any, any>;
 }
 
 const EventCard = component$<Props>(({ event, clickable, showDetail, noBottomBorder, from, to, subscribeAction }) => {
@@ -38,7 +37,7 @@ const EventCard = component$<Props>(({ event, clickable, showDetail, noBottomBor
     const subscriptionFormVisible = useSignal(false);
 
     useTask$(({ track }) => {
-        if (subscriptionFormVisible.value && subscribeAction?.value) {
+        if (subscriptionFormVisible.value && subscribeAction.value) {
             subscribeAction.value.success = undefined;
             subscribeAction.value.error = null;
         }
@@ -100,7 +99,7 @@ const EventCard = component$<Props>(({ event, clickable, showDetail, noBottomBor
                     ))}
                 </div>
                 <div class="flex flex-col">
-                    {event.subscribable && subscribeAction && (
+                    {event.subscribable && (
                         <Modal.Root bind:show={subscriptionFormVisible}>
                             <Modal.Trigger
                                 class={[buttonVariants({ look: 'outline' })]}
