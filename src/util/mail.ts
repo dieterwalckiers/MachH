@@ -1,6 +1,27 @@
 import nodemailer from "nodemailer";
 import { server$ } from "@builder.io/qwik-city";
 
+const createTransporter = server$(
+    function (
+        smtpData: {
+            serviceClient: string;
+            privateKey: string;
+        }
+    ) {
+        return nodemailer.createTransport({
+            host: "smtp.gmail.com",
+            port: 465,
+            secure: true,
+            auth: {
+                type: "OAuth2",
+                user: "inschrijvingen@mach-h.be",
+                serviceClient: smtpData.serviceClient,
+                privateKey: smtpData.privateKey,
+            },
+        });
+    }
+);
+
 export const sendConfirmationEmails = server$(
     async function (
         data: {
@@ -13,17 +34,25 @@ export const sendConfirmationEmails = server$(
         confirmationMailInfo: {
             subject: string;
             body: string;
+        },
+        smtpData: {
+            serviceClient: string;
+            privateKey: string;
         }
     ) {
         await Promise.all([
-            sendInternalEmail(data),
-            sendSubscriberEmail(data, confirmationMailInfo),
+            sendInternalEmail(smtpData, data),
+            sendSubscriberEmail(smtpData, data, confirmationMailInfo),
         ]);
     }
 );
 
 const sendInternalEmail = server$(
     async function (
+        smtpData: {
+            serviceClient: string;
+            privateKey: string;
+        },
         data: {
             id: string;
             event_slug: string;
@@ -32,23 +61,15 @@ const sendInternalEmail = server$(
             email: string;
         },
     ) {
+        const transporter = await createTransporter(smtpData);
         const mailOptions = {
-            from: "dieter@1983.gent",
-            to: "d.walckiers@protonmail.com",
+            from: "Mach-H <inschrijvingen@mach-h.be>",
+            to: "inschrijvingen@mach-h.be",
             subject: `Nieuwe inschrijving voor ${data.event_slug}`,
             html: `Nieuwe inschrijving voor ${data.event_slug} van ${data.first_name} ${data.last_name} (${data.email})! Bekijk alle inschrijvingen op supabase.com`,
             text: `Nieuwe inschrijving voor ${data.event_slug} van ${data.first_name} ${data.last_name} (${data.email})! Bekijk alle inschrijvingen op supabase.com`,
         };
         try {
-            const transporter = nodemailer.createTransport({
-                host: "mailing.labarraca.be",
-                port: 587,
-                secure: false,
-                auth: {
-                    user: "id8601_labarracabe",
-                    pass: "OQRgefmGcorNqBh",
-                },
-            });
             const sendResult = await transporter.sendMail(mailOptions);
             const { accepted, rejected, response } = sendResult;
             console.log(`internal confirmation email sent to d.walckiers@protonmail.com with response: ${response} (accepted: ${accepted}, rejected: ${rejected})`);
@@ -61,6 +82,10 @@ const sendInternalEmail = server$(
 
 const sendSubscriberEmail = server$(
     async function (
+        smtpData: {
+            serviceClient: string;
+            privateKey: string;
+        },
         data: {
             id: string;
             event_slug: string;
@@ -73,23 +98,15 @@ const sendSubscriberEmail = server$(
             body: string;
         }
     ) {
+        const transporter = await createTransporter(smtpData);
         const mailOptions = {
-            from: "dieter@1983.gent",
+            from: "Mach-H <inschrijvingen@mach-h.be>",
             to: data.email,
             subject: confirmationMailInfo.subject,
             html: confirmationMailInfo.body.replace(/(\r\n|\n|\r)/g, "<br>"),
             text: confirmationMailInfo.body,
         };
         try {
-            const transporter = nodemailer.createTransport({
-                host: "mailing.labarraca.be",
-                port: 587,
-                secure: false,
-                auth: {
-                    user: "id8601_labarracabe",
-                    pass: "OQRgefmGcorNqBh",
-                },
-            });
             const sendResult = await transporter.sendMail(mailOptions);
             const { accepted, rejected, response } = sendResult;
             console.log(`subscriber confirmation email sent to ${data.email} with response: ${response} (accepted: ${accepted}, rejected: ${rejected})`);
