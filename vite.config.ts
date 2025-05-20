@@ -17,18 +17,7 @@ export default defineConfig(() => {
     },
     ssr: {
       noExternal: [
-        "@qwik-city-plan",
-        "@builder.io/qwik-city",
-        "@builder.io/qwik",
-        "@qwikest/icons",
-        "@qwikest/icons/lucide",
-        "@qwikest/icons/heroicons",
-        "@qwikest/icons/heroicons/solid",
-        "@qwikest/icons/heroicons/outline",
-        "@qwikest/icons/heroicons/mini",
-        "@qwikest/icons/material-symbols",
-        "@qwikest/icons/material-symbols/rounded",
-        "@qwikest/icons/material-symbols/two-tone",
+        "nodemailer"
       ]
     }
   };
