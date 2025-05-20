@@ -70,8 +70,8 @@ export const useSubscribe = routeAction$(
                         body: data.eventConfirmationMailBody,
                     },
                     {
-                        serviceClient: requestEvent.env.get("GMAIL_SMTP_SERVICE_CLIENT"),
-                        privateKey: requestEvent.env.get("GMAIL_SMTP_PRIVATE_KEY"),
+                        serviceClient: requestEvent.env.get("GMAIL_SMTP_SERVICE_CLIENT")!,
+                        privateKey: requestEvent.env.get("GMAIL_SMTP_PRIVATE_KEY")!,
                     }
                 );
                 success = true;
