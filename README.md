@@ -8,12 +8,6 @@ build failed with generic "Command failed with exit code 1"
 -> somehow running "npx qwik build --help" revealed this (cause it used latest version of qwik?)
 
 
-## environment vars
-like SUPABASE_URL etc
-define them in .env.local file (https://qwik.dev/docs/guides/env-variables/)
-
-
-
 # Qwik City App 
 
 - [Qwik Docs](https://qwik.builder.io/)

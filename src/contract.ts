@@ -16,8 +16,6 @@ export interface Event {
     subscriptionMaxParticipants?: number;
     subscriptionIsPaid?: boolean;
     isFull?: boolean;
-    confirmationMailSubject?: string;
-    confirmationMailBody?: string;
 }
 
 export interface CallToAction {

@@ -1,4 +1,4 @@
-import { $, component$, useSignal, useTask$ } from "@builder.io/qwik";
+import { $, component$, useSignal } from "@builder.io/qwik";
 import type { Event } from "~/contract";
 import MachHTitle from "../shared/machhtitle";
 import Ball from "../Ball";
@@ -34,15 +34,8 @@ const EventCard = component$<Props>(({ event, clickable, showDetail, noBottomBor
 
     const hexColor = event.linkedProjects?.[0]?.hexColor;
 
-    const subscriptionFormVisible = useSignal(false);
+    const subscriptionFormVisible = useSignal(false)
 
-    useTask$(({ track }) => {
-        if (subscriptionFormVisible.value && subscribeAction.value) {
-            subscribeAction.value.success = undefined;
-            subscribeAction.value.error = null;
-        }
-        track(() => subscriptionFormVisible.value);
-    });
 
     return (
         <div
@@ -101,11 +94,8 @@ const EventCard = component$<Props>(({ event, clickable, showDetail, noBottomBor
                 <div class="flex flex-col">
                     {event.subscribable && (
                         <Modal.Root bind:show={subscriptionFormVisible}>
-                            <Modal.Trigger
-                                class={[buttonVariants({ look: 'outline' })]}
-                                disabled={event.isFull}
-                            >
-                                {event.isFull ? "Volzet" : "Schrijf je in"}
+                            <Modal.Trigger class={[buttonVariants({ look: 'outline' })]}>
+                                Schrijf je in
                             </Modal.Trigger>
                             <Modal.Panel>
                                 {/* <Modal.Title>Title</Modal.Title>

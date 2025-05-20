@@ -1,4 +1,4 @@
-import { Link, routeAction$, routeLoader$, z, zod$ } from "@builder.io/qwik-city";
+import { Link, routeAction$, routeLoader$ } from "@builder.io/qwik-city";
 import { component$, useComputed$ } from "@builder.io/qwik";
 import EventCard from "~/components/EventCard/EventCard";
 import MachHTitle from "~/components/shared/machhtitle";
@@ -6,9 +6,8 @@ import type { RequestEventLoader } from "@builder.io/qwik-city";
 import { createServerClient } from "supabase-auth-helpers-qwik";
 import { normalizeEvent } from "~/util/normalizing";
 import sanityClient from "~/cms/sanityClient";
-import { sendConfirmationEmails } from "~/util/mail";
 
-// TODO confirmation mail (pending data from frank), then mollie
+// pick back up: selecting and inserting works, implement error handling, confirmation, validation, tweak design, add confirmation mail (supabase edge function), then release with free-only events, then implement mollie
 
 export const useRouteInfo = routeLoader$(async (requestEvent: RequestEventLoader) => {
     const [event] = await sanityClient.fetch(`*[_type == "event" && slug.current == "${requestEvent.params.slug}"]{..., "imageUrl": image.asset->url,"imageRef": image.asset._ref, linkedProjects[]->{name, slug, hexColor}}`);
@@ -36,70 +35,37 @@ export const useRouteInfo = routeLoader$(async (requestEvent: RequestEventLoader
     };
 })
 
-export const useSubscribe = routeAction$(
-    async (data, requestEvent) => {
-        const supabaseClient = createServerClient(
-            requestEvent.env.get("SUPABASE_URL")!,
-            requestEvent.env.get("SUPABASE_ANON_KEY")!,
-            requestEvent
-        );
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        try {
-            const { data: supabaseResponseData, error } = await supabaseClient.from("attendees")
-                .insert({
-                    event_slug: data.eventSlug,
-                    first_name: data.firstName,
-                    last_name: data.lastName,
-                    email: data.email,
-                })
-                .select()
-                .single();
-            console.log("DATA!", supabaseResponseData);
-            let success;
-            if (error) {
-                console.error("error", error);
-                success = false;
-            } else if (!(supabaseResponseData.id)) {
-                console.log("no id in response data, considering it an error");
-                success = false;
-            } else {
-                await sendConfirmationEmails(
-                    supabaseResponseData,
-                    {
-                        subject: data.eventConfirmationMailSubject,
-                        body: data.eventConfirmationMailBody,
-                    }
-                );
-                success = true;
-            }
-            return {
-                success,
-                error,
-            };
-        } catch (e) {
-            console.error("caught error", e);
-        }
-    },
-    zod$(
-        z.object(
-            {
-                firstName: z.string().min(1, "Voornaam is verplicht"),
-                lastName: z.string().min(1, "Achternaam is verplicht"),
-                email: z.string().email("Ongeldig email adres"),
-                eventSlug: z.string().min(1, "Event slug is verplicht"),
-                mathQuestion: z.coerce.number().min(1, "Vul een getal in bij de rekensom"),
-                mathSolution: z.coerce.number(),
-                eventConfirmationMailSubject: z.string(),
-                eventConfirmationMailBody: z.string(),
-            }
-        ).refine((data) => {
-            return data.mathSolution === data.mathQuestion;
-        }, {
-            message: "Er is een foutje geslopen in de rekensom",
-            path: ["mathQuestion"],
-        }),
-    )
-);
+export const useSubscribe = routeAction$(async (data, requestEvent) => {
+    const supabaseClient = createServerClient(
+        requestEvent.env.get("SUPABASE_URL")!,
+        requestEvent.env.get("SUPABASE_ANON_KEY")!,
+        requestEvent
+    );
+    console.log("inserting", data);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { data: supabaseResponseData, error } = await supabaseClient.from("attendees")
+        .insert({
+            event_slug: data.eventSlug,
+            first_name: data.firstName,
+            last_name: data.lastName,
+            email: data.email,
+        })
+        .select()
+        .single();
+    console.log("DATA!", supabaseResponseData);
+    let success;
+    if (error) {
+        // errorTextSignal.value = error.message;
+        console.error("error", error);
+        success = false;
+    } else {
+        // errorTextSignal.value = "";
+        success = true;
+    }
+    return {
+        success,
+    };
+});
 
 const Event = component$(() => {
 
