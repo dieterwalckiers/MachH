@@ -1,5 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { server$ } from "@builder.io/qwik-city";
-import { Resend } from "resend";
 
 export const sendConfirmationEmails = server$(
     async function (
@@ -33,16 +33,16 @@ const sendInternalEmail = server$(
         },
     ) {
 
-        const resend = new Resend("re_XYjHE8Gv_4Lp6Gvtk85fzZD3z8TGA77sV");
-        const response = await resend.emails.send({
-            from: "Mach-H <inschrijvingen@transactional.mach-h.be>",
-            replyTo: "inschrijvingen@mach-h.be",
-            to: "inschrijvingen@mach-h.be",
-            subject: `Nieuwe inschrijving voor ${data.event_slug}`,
-            html: `<div><p>Nieuwe inschrijving voor ${data.event_slug} van ${data.first_name} ${data.last_name} (${data.email})!</p><p>Bekijk alle inschrijvingen op supabase.com</p></div>`,
-            text: `Nieuwe inschrijving voor ${data.event_slug} van ${data.first_name} ${data.last_name} (${data.email})! Bekijk alle inschrijvingen op supabase.com`,
-        });
-        console.log("response.data?.id", response.data?.id);
+        // const resend = new Resend("re_XYjHE8Gv_4Lp6Gvtk85fzZD3z8TGA77sV");
+        // const response = await resend.emails.send({
+        //     from: "Mach-H <inschrijvingen@transactional.mach-h.be>",
+        //     replyTo: "inschrijvingen@mach-h.be",
+        //     to: "inschrijvingen@mach-h.be",
+        //     subject: `Nieuwe inschrijving voor ${data.event_slug}`,
+        //     html: `<div><p>Nieuwe inschrijving voor ${data.event_slug} van ${data.first_name} ${data.last_name} (${data.email})!</p><p>Bekijk alle inschrijvingen op supabase.com</p></div>`,
+        //     text: `Nieuwe inschrijving voor ${data.event_slug} van ${data.first_name} ${data.last_name} (${data.email})! Bekijk alle inschrijvingen op supabase.com`,
+        // });
+        // console.log("response.data?.id", response.data?.id);
     }
 );
 
@@ -60,15 +60,14 @@ const sendSubscriberEmail = server$(
             body: string;
         }
     ) {
-
-        const resend = new Resend("re_XYjHE8Gv_4Lp6Gvtk85fzZD3z8TGA77sV");
-        await resend.emails.send({
-            from: "Mach-H <inschrijvingen@transactional.mach-h.be>",
-            replyTo: "inschrijvingen@mach-h.be",
-            to: data.email,
-            subject: confirmationMailInfo.subject,
-            html: confirmationMailInfo.body.replace(/(\r\n|\n|\r)/g, "<br>"),
-            text: confirmationMailInfo.body,
-        });
+        // const resend = new Resend("re_XYjHE8Gv_4Lp6Gvtk85fzZD3z8TGA77sV");
+        // await resend.emails.send({
+        //     from: "Mach-H <inschrijvingen@transactional.mach-h.be>",
+        //     replyTo: "inschrijvingen@mach-h.be",
+        //     to: data.email,
+        //     subject: confirmationMailInfo.subject,
+        //     html: confirmationMailInfo.body.replace(/(\r\n|\n|\r)/g, "<br>"),
+        //     text: confirmationMailInfo.body,
+        // });
     }
 );
