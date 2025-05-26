@@ -31,11 +31,7 @@ function extractOrigDims(ref: string): { origWidth: number, origHeight: number }
     }
 }
 
-export function normalizeEvent(
-    event: any,
-    skipLinkedProjects = false,
-    extraProps: Partial<Event> = {},
-): Event {
+export function normalizeEvent(event: any, skipLinkedProjects = false): Event {
     const [y, m, d] = event.date.split('-');
     const image = event.imageUrl && {
         url: event.imageUrl,
@@ -53,7 +49,6 @@ export function normalizeEvent(
         slug: event.slug?.current,
         ...(!skipLinkedProjects ? { linkedProjects: event.linkedProjects?.map((p: any) => normalizeProject(p)) } : {}),
         descriptionHtml: toHTML(event.description),
-        ...extraProps,
     }
 }
 

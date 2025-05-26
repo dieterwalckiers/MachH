@@ -1,10 +1,10 @@
-import { $, component$, createContextId, Slot, useContextProvider, useOnWindow, useStore, useTask$ } from "@builder.io/qwik";
+import { $, component$, createContextId, Slot, useContextProvider, useOnWindow, useStore, useTask$, useVisibleTask$ } from "@builder.io/qwik";
 import { routeLoader$, type RequestHandler } from "@builder.io/qwik-city";
 import sanityClient from "~/cms/sanityClient";
 import MainMenu from "~/components/MainMenu/mainmenu";
 import Footer from "~/components/footer/footer";
 import Header from "~/components/header/header";
-import type { Project, Settings } from "~/contract";
+import type { Project } from "~/contract";
 import { normalizeProject } from "~/util/normalizing";
 import type { ScreenSize } from "~/util/rwd";
 import { getScreenSize } from "~/util/rwd";
@@ -34,7 +34,7 @@ export const useProjects = routeLoader$(async () => {
 
 export const useSettings = routeLoader$(async () => {
     const settings = await sanityClient.fetch('*[_type == "settings"][0]');
-    return settings as Settings;
+    return settings;
 })
 
 export default component$(() => {
@@ -55,17 +55,14 @@ export default component$(() => {
     useContextProvider(MainContext, store);
 
     useOnWindow(
-        "load",
-        $(() => {
-            store.screenSize = getScreenSize();
-        })
-    );
-    useOnWindow(
-        "resize",
+        'resize',
         $(() => {
             store.screenSize = getScreenSize()
         })
-    );
+    )
+    useVisibleTask$(async () => {
+        store.screenSize = getScreenSize();
+    });
 
     return (
         <div class="w-full flex flex-col py-4 items-center font-roboto text-xxl md:text-xl">

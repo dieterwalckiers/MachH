@@ -15,9 +15,6 @@ export interface Event {
     subscribable?: boolean;
     subscriptionMaxParticipants?: number;
     subscriptionIsPaid?: boolean;
-    isFull?: boolean;
-    confirmationMailSubject?: string;
-    confirmationMailBody?: string;
 }
 
 export interface CallToAction {
@@ -72,13 +69,4 @@ export interface Tile {
 export interface Settings {
     tagline: string;
     isLinkToNewsPageInMenu: boolean;
-}
-
-export interface Attendee {
-    id: number,
-    subscribedAt: Date,
-    firstName: string,
-    lastName: string,
-    email: string,
-    eventSlug: string,
 }
