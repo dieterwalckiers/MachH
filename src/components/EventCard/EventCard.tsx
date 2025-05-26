@@ -1,12 +1,17 @@
-import { $, component$, useSignal } from "@builder.io/qwik";
+import { $, component$, useSignal, useTask$ } from "@builder.io/qwik";
 import type { Event } from "~/contract";
 import MachHTitle from "../shared/machhtitle";
 import Ball from "../Ball";
+import type { ActionStore} from "@builder.io/qwik-city";
 import { Link, useNavigate } from "@builder.io/qwik-city";
 import MachHImage from "../MachHImage";
 import CallToActions from "../shared/calltoactions";
 import HtmlBlock from "../HtmlBlock/htmlblock";
-import MachHButton from "../shared/machhbutton";
+import { Modal } from "../ui/modal/modal";
+import { buttonVariants } from "../ui";
+import SubscriptionForm from "../SubscriptionForm/SubscriptionForm";
+import { cn } from '@qwik-ui/utils';
+import { LuX } from '@qwikest/icons/lucide';
 
 interface Props {
     event: Event;
@@ -15,9 +20,10 @@ interface Props {
     noBottomBorder?: boolean;
     from?: number;
     to?: number;
+    subscribeAction?: ActionStore<any, any>;
 }
 
-const EventCard = component$<Props>(({ event, clickable, showDetail, noBottomBorder, from, to }) => {
+const EventCard = component$<Props>(({ event, clickable, showDetail, noBottomBorder, from, to, subscribeAction }) => {
 
     const nav = useNavigate();
 
@@ -29,8 +35,15 @@ const EventCard = component$<Props>(({ event, clickable, showDetail, noBottomBor
 
     const hexColor = event.linkedProjects?.[0]?.hexColor;
 
-    const subscriptionFormVisible = useSignal(false)
+    const subscriptionFormVisible = useSignal(false);
 
+    useTask$(({ track }) => {
+        if (subscriptionFormVisible.value && subscribeAction?.value) {
+            subscribeAction.value.success = undefined;
+            subscribeAction.value.error = null;
+        }
+        track(() => subscriptionFormVisible.value);
+    });
 
     return (
         <div
@@ -87,17 +100,33 @@ const EventCard = component$<Props>(({ event, clickable, showDetail, noBottomBor
                     ))}
                 </div>
                 <div class="flex flex-col">
-                    {event.subscribable && (
-                        <MachHButton
-                            onClick$={() => {
-                                subscriptionFormVisible.value = true;
-                            }}
-                            class="text-sm mt-2"
-                        >
-                            <label class="pointer-events-none">
-                                Schrijf je in
-                            </label>
-                        </MachHButton>
+                    {event.subscribable && subscribeAction && (
+                        <Modal.Root bind:show={subscriptionFormVisible}>
+                            <Modal.Trigger
+                                class={[buttonVariants({ look: 'outline' })]}
+                                disabled={event.isFull}
+                            >
+                                {event.isFull ? "Volzet" : "Schrijf je in"}
+                            </Modal.Trigger>
+                            <Modal.Panel>
+                                {/* <Modal.Title>Title</Modal.Title>
+                                <Modal.Description>Description</Modal.Description>
+                                <div>...</div> */}
+                                <SubscriptionForm
+                                    event={event}
+                                    subscribeAction={subscribeAction}
+                                />
+                                <Modal.Close
+                                    class={cn(
+                                        buttonVariants({ size: 'icon', look: 'link' }),
+                                        'absolute right-3 top-2',
+                                    )}
+                                    type="submit"
+                                >
+                                    <LuX class="h-5 w-5" />
+                                </Modal.Close>
+                            </Modal.Panel>
+                        </Modal.Root>
                     )}
                     {event.callToActions?.length && (
                         <CallToActions callToActions={event.callToActions} />
