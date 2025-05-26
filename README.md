@@ -1,5 +1,8 @@
 # dyte notes
 
+## Important! Does not function properly with Yarn package manager!
+Lots of obscure build errors with yarn. OK with npm, didn't test yet with pnpm
+
 ## troubleshooting
 
 build failed with generic "Command failed with exit code 1"
@@ -7,6 +10,9 @@ build failed with generic "Command failed with exit code 1"
 -> was due to an unused import.
 -> somehow running "npx qwik build --help" revealed this (cause it used latest version of qwik?)
 
+## environment vars
+like SUPABASE_URL etc
+define them in .env.local file (https://qwik.dev/docs/guides/env-variables/)
 
 # Qwik City App 
 
