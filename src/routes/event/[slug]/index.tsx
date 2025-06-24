@@ -78,7 +78,7 @@ export const useSubscribe = routeAction$(
                 // Create Mollie payment
                 const mollieApiKey = requestEvent.env.get("MOLLIE_API_KEY");
                 const publicAppUrl = requestEvent.env.get("PUBLIC_APP_URL") || requestEvent.url.origin;
-                const mollieWebhookUrl = requestEvent.env.get("MOLLIE_WEBHOOK_URL") || `${publicAppUrl}/webhook/mollie`;
+                const mollieWebhookUrl = requestEvent.env.get("MOLLIE_WEBHOOK_URL") || `${publicAppUrl}/api/webhook/mollie`;
                 
                 if (!mollieApiKey) {
                     console.error("MOLLIE_API_KEY not configured");
