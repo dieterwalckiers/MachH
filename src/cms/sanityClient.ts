@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 // Note: CommonJS style is required for this file to work with Vercel edge function runtime
-const { createClient: createSanityClient } = require('@sanity/client');
+import { createClient } from '@sanity/client'
 
-module.exports = createSanityClient({
+export default createClient({
     projectId: 'x6sfouap',
     dataset: 'production',
     useCdn: true, // set to `false` to bypass the edge cache
