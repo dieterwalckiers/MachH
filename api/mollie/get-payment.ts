@@ -1,7 +1,12 @@
-import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { createMollieClient, type MollieClient } from '@mollie/api-client';
+/* eslint-disable @typescript-eslint/no-var-requires */
+// Note: CommonJS style is required for this file to work with Vercel edge function runtime
+const { createMollieClient: createMollieClientFn } = require('@mollie/api-client');
 
-export default async function handler(req: VercelRequest, res: VercelResponse) {
+module.exports.config = {
+  runtime: 'nodejs18.x', // Force Node.js runtime instead of Edge
+};
+
+module.exports = async function handler(req: any, res: any) {
     if (req.method !== 'POST') {
         return res.status(405).json({ error: 'Method not allowed' });
     }
@@ -18,7 +23,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             return res.status(400).json({ error: "Payment ID is required" });
         }
 
-        const mollieClient: MollieClient = createMollieClient({ apiKey: mollieApiKey });
+        const mollieClient = createMollieClientFn({ apiKey: mollieApiKey });
         const payment = await mollieClient.payments.get(body.paymentId);
 
         // Return serializable payment data
