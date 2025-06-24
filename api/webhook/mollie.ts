@@ -26,10 +26,21 @@ module.exports = async function handler(req: any, res: any) {
             return res.status(500).json({ error: 'Server configuration error' });
         }
         
-        // Get payment details from Mollie
+        // Get payment details from Mollie directly
         const publicAppUrl = process.env.PUBLIC_APP_URL || `https://${req.headers.host}`;
-        const { getMolliePayment } = await import('../../src/services/mollie');
-        const payment = await getMolliePayment(paymentId, publicAppUrl);
+        const mollieResponse = await fetch(`${publicAppUrl}/api/mollie/get-payment`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ paymentId }),
+        });
+
+        if (!mollieResponse.ok) {
+            throw new Error(`Failed to get payment: ${mollieResponse.status} ${mollieResponse.statusText}`);
+        }
+
+        const payment = await mollieResponse.json();
         
         if (!payment.metadata?.attendeeId) {
             return res.status(400).json({ error: 'Invalid payment metadata' });
