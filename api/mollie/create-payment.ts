@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
+// Note: CommonJS style is required for this file to work with Vercel edge function runtime
 const { createMollieClient } = require('@mollie/api-client');
 
 module.exports.config = {
