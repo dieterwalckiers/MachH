@@ -30,6 +30,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
         body = req.body as CreatePaymentRequest;
         
+        // Validate required fields
+        if (!body || typeof body.amount !== 'number' || !body.description || !body.redirectUrl || !body.webhookUrl) {
+            console.error("Invalid request body:", body);
+            return res.status(400).json({ error: "Missing required fields" });
+        }
+        
+        console.log("Creating Mollie client with API key:", mollieApiKey ? "Present" : "Missing");
         const mollieClient: MollieClient = createMollieClient({ apiKey: mollieApiKey });
 
         paymentParams = {
