@@ -2,7 +2,6 @@ import { component$, useSignal, useVisibleTask$ } from "@builder.io/qwik";
 import { routeLoader$, server$ } from "@builder.io/qwik-city";
 import type { RequestEventLoader } from "@builder.io/qwik-city";
 import { createServerClient } from "supabase-auth-helpers-qwik";
-import { getMolliePayment } from "~/services/mollie";
 
 export const usePaymentStatus = routeLoader$(async (requestEvent: RequestEventLoader) => {
     const paymentId = requestEvent.query.get("p");
@@ -52,6 +51,7 @@ export const usePaymentStatus = routeLoader$(async (requestEvent: RequestEventLo
         }
         
         // Get payment details from Mollie
+        const { getMolliePayment } = await import("~/services/mollie");
         const payment = await getMolliePayment(actualPaymentId, mollieApiKey);
         
         if (!attendee) {
@@ -142,6 +142,7 @@ export const checkPaymentStatus = server$(async function(paymentId: string | nul
         }
         
         // Get payment details from Mollie
+        const { getMolliePayment } = await import("~/services/mollie");
         const payment = await getMolliePayment(actualPaymentId, mollieApiKey);
         
         if (!attendee) {

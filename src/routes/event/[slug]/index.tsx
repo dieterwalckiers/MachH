@@ -7,7 +7,6 @@ import { createServerClient } from "supabase-auth-helpers-qwik";
 import { normalizeEvent } from "~/util/normalizing";
 import sanityClient from "~/cms/sanityClient";
 import { sendConfirmationEmails } from "~/util/mail";
-import { createMolliePayment } from "~/services/mollie";
 
 // TODO confirmation mail (pending data from frank), then mollie
 
@@ -85,6 +84,9 @@ export const useSubscribe = routeAction$(
                     console.error("MOLLIE_API_KEY not configured");
                     return { success: false, error: "Payment configuration error" };
                 }
+                
+                // Import Mollie functions dynamically to avoid bundling in Edge Function
+                const { createMolliePayment } = await import("~/services/mollie");
                 
                 const payment = await createMolliePayment({
                     amount: event.subscriptionPrice,

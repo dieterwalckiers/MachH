@@ -1,6 +1,5 @@
 import type { RequestHandler } from "@builder.io/qwik-city";
 import { createServerClient } from "supabase-auth-helpers-qwik";
-import { getMolliePayment, verifyWebhookRequest } from "~/services/mollie";
 import { sendConfirmationEmails } from "~/util/mail";
 import sanityClient from "~/cms/sanityClient";
 
@@ -11,6 +10,7 @@ export const onPost: RequestHandler = async (requestEvent) => {
         const paymentId = body?.id as string;
         
         // Basic verification
+        const { verifyWebhookRequest } = await import("~/services/mollie");
         if (!await verifyWebhookRequest(paymentId)) {
             requestEvent.json(400, { error: "Invalid payment ID" });
             return;
@@ -24,6 +24,7 @@ export const onPost: RequestHandler = async (requestEvent) => {
         }
         
         // Get payment details from Mollie
+        const { getMolliePayment } = await import("~/services/mollie");
         const payment = await getMolliePayment(paymentId, mollieApiKey);
         
         if (!payment.metadata?.attendeeId) {
