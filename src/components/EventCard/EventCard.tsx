@@ -36,6 +36,7 @@ const EventCard = component$<Props>(({ event, clickable, showDetail, noBottomBor
     const hexColor = event.linkedProjects?.[0]?.hexColor;
 
     const subscriptionFormVisible = useSignal(false);
+    const mouseDownInsideModal = useSignal(false);
 
     useTask$(({ track }) => {
         if (subscriptionFormVisible.value && subscribeAction?.value) {
@@ -101,7 +102,7 @@ const EventCard = component$<Props>(({ event, clickable, showDetail, noBottomBor
                 </div>
                 <div class="flex flex-col">
                     {event.subscribable && subscribeAction && (
-                        <Modal.Root bind:show={subscriptionFormVisible}>
+                        <Modal.Root bind:show={subscriptionFormVisible} closeOnBackdropClick={false}>
                             <Modal.Trigger
                                 class={[buttonVariants({ look: 'outline' })]}
                                 disabled={event.isFull}
@@ -109,22 +110,38 @@ const EventCard = component$<Props>(({ event, clickable, showDetail, noBottomBor
                                 {event.isFull ? "Volzet" : "Schrijf je in"}
                             </Modal.Trigger>
                             <Modal.Panel>
-                                {/* <Modal.Title>Title</Modal.Title>
-                                <Modal.Description>Description</Modal.Description>
-                                <div>...</div> */}
-                                <SubscriptionForm
-                                    event={event}
-                                    subscribeAction={subscribeAction}
+                                {/* Custom backdrop that handles clicks properly */}
+                                <div 
+                                    class="fixed inset-0 z-40 bg-black/50"
+                                    onMouseDown$={() => {
+                                        mouseDownInsideModal.value = false;
+                                    }}
+                                    onMouseUp$={() => {
+                                        if (!mouseDownInsideModal.value) {
+                                            subscriptionFormVisible.value = false;
+                                        }
+                                    }}
                                 />
-                                <Modal.Close
-                                    class={cn(
-                                        buttonVariants({ size: 'icon', look: 'link' }),
-                                        'absolute right-3 top-2',
-                                    )}
-                                    type="submit"
+                                <div 
+                                    class="relative z-50 bg-white rounded-lg p-6"
+                                    onMouseDown$={() => {
+                                        mouseDownInsideModal.value = true;
+                                    }}
                                 >
-                                    <LuX class="h-5 w-5" />
-                                </Modal.Close>
+                                    <SubscriptionForm
+                                        event={event}
+                                        subscribeAction={subscribeAction}
+                                    />
+                                    <Modal.Close
+                                        class={cn(
+                                            buttonVariants({ size: 'icon', look: 'link' }),
+                                            'absolute right-3 top-2',
+                                        )}
+                                        type="submit"
+                                    >
+                                        <LuX class="h-5 w-5" />
+                                    </Modal.Close>
+                                </div>
                             </Modal.Panel>
                         </Modal.Root>
                     )}

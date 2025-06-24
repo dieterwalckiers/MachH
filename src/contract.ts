@@ -15,6 +15,7 @@ export interface Event {
     subscribable?: boolean;
     subscriptionMaxParticipants?: number;
     subscriptionIsPaid?: boolean;
+    subscriptionPrice?: number;
     isFull?: boolean;
     confirmationMailSubject?: string;
     confirmationMailBody?: string;
@@ -81,4 +82,7 @@ export interface Attendee {
     lastName: string,
     email: string,
     eventSlug: string,
+    paymentStatus?: 'pending_payment' | 'confirmed' | 'failed',
+    paymentId?: string,
+    paidAt?: Date,
 }
