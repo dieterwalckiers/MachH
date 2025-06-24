@@ -56,6 +56,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     } catch (error) {
         console.error("Mollie payment creation error:", error);
-        return res.status(500).json({ error: "Failed to create payment" });
+        console.error("Request body:", JSON.stringify(body, null, 2));
+        console.error("Payment params:", JSON.stringify(paymentParams, null, 2));
+        return res.status(500).json({ error: "Failed to create payment", details: error instanceof Error ? error.message : String(error) });
     }
 }
