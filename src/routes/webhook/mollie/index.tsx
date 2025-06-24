@@ -5,6 +5,8 @@ import sanityClient from "~/cms/sanityClient";
 
 export const onPost: RequestHandler = async (requestEvent) => {
     try {
+        // Skip CSRF for webhooks
+        requestEvent.sharedMap.set("skipCSRF", true);
         // Get payment ID from request
         const body = await requestEvent.parseBody() as any;
         const paymentId = body?.id as string;
