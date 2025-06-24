@@ -12,10 +12,10 @@
   ],
   "functions": {
     "src/routes/api/mollie/create-payment/index.ts": {
-      "runtime": "nodejs18.x"
+      "runtime": "@vercel/node"
     },
     "src/routes/api/mollie/get-payment/index.ts": {
-      "runtime": "nodejs18.x"
+      "runtime": "@vercel/node"
     }
   }
 }
