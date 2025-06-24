@@ -9,13 +9,5 @@
         }
       ]
     }
-  ],
-  "functions": {
-    "src/routes/api/mollie/create-payment/index.ts": {
-      "runtime": "@vercel/node@3.1.7"
-    },
-    "src/routes/api/mollie/get-payment/index.ts": {
-      "runtime": "@vercel/node@3.1.7"
-    }
-  }
+  ]
 }

@@ -1,4 +1,4 @@
-import type { RequestHandler } from "@builder.io/qwik-city";
+import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { createMollieClient, type MollieClient } from '@mollie/api-client';
 
 interface CreatePaymentRequest {
@@ -15,15 +15,18 @@ interface CreatePaymentRequest {
     };
 }
 
-export const onPost: RequestHandler = async (requestEvent) => {
+export default async function handler(req: VercelRequest, res: VercelResponse) {
+    if (req.method !== 'POST') {
+        return res.status(405).json({ error: 'Method not allowed' });
+    }
+
     try {
-        const mollieApiKey = requestEvent.env.get("MOLLIE_API_KEY");
+        const mollieApiKey = process.env.MOLLIE_API_KEY;
         if (!mollieApiKey) {
-            requestEvent.json(500, { error: "Server configuration error" });
-            return;
+            return res.status(500).json({ error: "Server configuration error" });
         }
 
-        const body = await requestEvent.parseBody() as CreatePaymentRequest;
+        const body = req.body as CreatePaymentRequest;
         
         const mollieClient: MollieClient = createMollieClient({ apiKey: mollieApiKey });
 
@@ -41,7 +44,7 @@ export const onPost: RequestHandler = async (requestEvent) => {
         const payment = await mollieClient.payments.create(paymentParams);
 
         // Return serializable payment data
-        requestEvent.json(200, {
+        return res.status(200).json({
             id: payment.id,
             status: payment.status,
             amount: payment.amount,
@@ -53,6 +56,6 @@ export const onPost: RequestHandler = async (requestEvent) => {
 
     } catch (error) {
         console.error("Mollie payment creation error:", error);
-        requestEvent.json(500, { error: "Failed to create payment" });
+        return res.status(500).json({ error: "Failed to create payment" });
     }
-};
+}
