@@ -10,8 +10,8 @@ export const onPost: RequestHandler = async (requestEvent) => {
         const paymentId = body?.id as string;
         
         // Basic verification
-        const { verifyWebhookRequest } = await import("~/services/mollie");
-        if (!await verifyWebhookRequest(paymentId)) {
+        const { verifyWebhookRequest, getMolliePayment } = await import("~/services/mollie");
+        if (!verifyWebhookRequest(paymentId)) {
             requestEvent.json(400, { error: "Invalid payment ID" });
             return;
         }
@@ -24,8 +24,8 @@ export const onPost: RequestHandler = async (requestEvent) => {
         }
         
         // Get payment details from Mollie
-        const { getMolliePayment } = await import("~/services/mollie");
-        const payment = await getMolliePayment(paymentId, mollieApiKey);
+        const publicAppUrl = requestEvent.env.get("PUBLIC_APP_URL") || requestEvent.url.origin;
+        const payment = await getMolliePayment(paymentId, publicAppUrl);
         
         if (!payment.metadata?.attendeeId) {
             requestEvent.json(400, { error: "Invalid payment metadata" });

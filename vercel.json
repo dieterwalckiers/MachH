@@ -9,5 +9,13 @@
         }
       ]
     }
-  ]
+  ],
+  "functions": {
+    "src/routes/api/mollie/create-payment/index.ts": {
+      "runtime": "nodejs18.x"
+    },
+    "src/routes/api/mollie/get-payment/index.ts": {
+      "runtime": "nodejs18.x"
+    }
+  }
 }

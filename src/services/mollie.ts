@@ -1,6 +1,3 @@
-import { createMollieClient, type MollieClient, type Payment } from '@mollie/api-client';
-import { server$ } from "@builder.io/qwik-city";
-
 export interface CreatePaymentParams {
     amount: number;
     description: string;
@@ -15,37 +12,49 @@ export interface CreatePaymentParams {
     };
 }
 
-export const createMolliePayment = server$(
-    async function (params: CreatePaymentParams, mollieApiKey: string): Promise<Payment> {
-        const mollieClient: MollieClient = createMollieClient({ apiKey: mollieApiKey });
+export interface PaymentData {
+    id: string;
+    status: string;
+    amount: any;
+    description: string;
+    metadata: any;
+    createdAt: string;
+    paidAt?: string;
+    checkoutUrl?: string;
+}
 
-        const paymentParams: any = {
-            amount: {
-                currency: 'EUR',
-                value: params.amount.toFixed(2)
-            },
-            description: params.description,
-            redirectUrl: params.redirectUrl,
-            webhookUrl: params.webhookUrl,
-            metadata: params.metadata
-        };
-        
-        const payment = await mollieClient.payments.create(paymentParams);
+export async function createMolliePayment(params: CreatePaymentParams, baseUrl: string): Promise<PaymentData> {
+    const response = await fetch(`${baseUrl}/api/mollie/create-payment`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(params),
+    });
 
-        return payment;
+    if (!response.ok) {
+        throw new Error(`Failed to create payment: ${response.statusText}`);
     }
-);
 
-export const getMolliePayment = server$(
-    async function (paymentId: string, mollieApiKey: string): Promise<Payment> {
-        const mollieClient: MollieClient = createMollieClient({ apiKey: mollieApiKey });
-        const payment = await mollieClient.payments.get(paymentId);
-        return payment;
-    }
-);
+    return await response.json();
+}
 
-export const verifyWebhookRequest = server$(
-    async function (paymentId: string | undefined): Promise<boolean> {
-        return !!(paymentId && paymentId.startsWith('tr_'));
+export async function getMolliePayment(paymentId: string, baseUrl: string): Promise<PaymentData> {
+    const response = await fetch(`${baseUrl}/api/mollie/get-payment`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ paymentId }),
+    });
+
+    if (!response.ok) {
+        throw new Error(`Failed to get payment: ${response.statusText}`);
     }
-);
+
+    return await response.json();
+}
+
+export function verifyWebhookRequest(paymentId: string | undefined): boolean {
+    return !!(paymentId && paymentId.startsWith('tr_'));
+}

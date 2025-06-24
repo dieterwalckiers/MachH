@@ -52,7 +52,8 @@ export const usePaymentStatus = routeLoader$(async (requestEvent: RequestEventLo
         
         // Get payment details from Mollie
         const { getMolliePayment } = await import("~/services/mollie");
-        const payment = await getMolliePayment(actualPaymentId, mollieApiKey);
+        const publicAppUrl = requestEvent.env.get("PUBLIC_APP_URL") || requestEvent.url.origin;
+        const payment = await getMolliePayment(actualPaymentId, publicAppUrl);
         
         if (!attendee) {
             // If we didn't get attendee from attendeeId, get it from payment metadata
@@ -143,7 +144,8 @@ export const checkPaymentStatus = server$(async function(paymentId: string | nul
         
         // Get payment details from Mollie
         const { getMolliePayment } = await import("~/services/mollie");
-        const payment = await getMolliePayment(actualPaymentId, mollieApiKey);
+        const publicAppUrl = this.env.get("PUBLIC_APP_URL") || this.url.origin;
+        const payment = await getMolliePayment(actualPaymentId, publicAppUrl);
         
         if (!attendee) {
             // If we didn't get attendee from attendeeId, get it from payment metadata

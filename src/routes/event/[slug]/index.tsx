@@ -85,7 +85,7 @@ export const useSubscribe = routeAction$(
                     return { success: false, error: "Payment configuration error" };
                 }
                 
-                // Import Mollie functions dynamically to avoid bundling in Edge Function
+                // Use API route to create payment
                 const { createMolliePayment } = await import("~/services/mollie");
                 
                 const payment = await createMolliePayment({
@@ -100,7 +100,7 @@ export const useSubscribe = routeAction$(
                         lastName: data.lastName,
                         email: data.email,
                     }
-                }, mollieApiKey);
+                }, publicAppUrl);
                 
                 // Update attendee with payment ID
                 await supabaseClient.from("attendees")
@@ -110,7 +110,7 @@ export const useSubscribe = routeAction$(
                 // Return payment URL for redirect
                 return {
                     success: true,
-                    paymentUrl: payment.getCheckoutUrl(),
+                    paymentUrl: payment.checkoutUrl,
                 };
             } else {
                 // Free event - send confirmation immediately
