@@ -33,7 +33,21 @@ export async function createMolliePayment(params: CreatePaymentParams, baseUrl: 
     });
 
     if (!response.ok) {
-        throw new Error(`Failed to create payment: ${response.statusText}`);
+        // Enhanced error logging for debugging
+        const errorBody = await response.text().catch(() => 'Unable to read response body');
+        console.error('Mollie payment creation failed:', {
+            status: response.status,
+            statusText: response.statusText,
+            url: `${baseUrl}/api/mollie/create-payment`,
+            responseBody: errorBody,
+            requestParams: {
+                ...params,
+                // Don't log sensitive data like payment amounts in production
+                amount: process.env.NODE_ENV === 'production' ? '[REDACTED]' : params.amount
+            }
+        });
+        
+        throw new Error(`Failed to create payment: ${response.status} ${response.statusText} - ${errorBody}`);
     }
 
     return await response.json();
@@ -49,7 +63,17 @@ export async function getMolliePayment(paymentId: string, baseUrl: string): Prom
     });
 
     if (!response.ok) {
-        throw new Error(`Failed to get payment: ${response.statusText}`);
+        // Enhanced error logging for debugging
+        const errorBody = await response.text().catch(() => 'Unable to read response body');
+        console.error('Mollie payment retrieval failed:', {
+            status: response.status,
+            statusText: response.statusText,
+            url: `${baseUrl}/api/mollie/get-payment`,
+            responseBody: errorBody,
+            requestParams: { paymentId }
+        });
+        
+        throw new Error(`Failed to get payment: ${response.status} ${response.statusText} - ${errorBody}`);
     }
 
     return await response.json();

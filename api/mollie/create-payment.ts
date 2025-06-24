@@ -19,6 +19,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     if (req.method !== 'POST') {
         return res.status(405).json({ error: 'Method not allowed' });
     }
+    let body;
+    let paymentParams;
 
     try {
         const mollieApiKey = process.env.MOLLIE_API_KEY;
@@ -26,11 +28,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             return res.status(500).json({ error: "Server configuration error" });
         }
 
-        const body = req.body as CreatePaymentRequest;
+        body = req.body as CreatePaymentRequest;
         
         const mollieClient: MollieClient = createMollieClient({ apiKey: mollieApiKey });
 
-        const paymentParams: any = {
+        paymentParams = {
             amount: {
                 currency: 'EUR',
                 value: body.amount.toFixed(2)
