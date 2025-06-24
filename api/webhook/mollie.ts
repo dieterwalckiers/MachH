@@ -1,9 +1,13 @@
-import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { createClient } from '@supabase/supabase-js';
-import { sendConfirmationEmails } from '../../src/util/mail';
-import sanityClient from '../../src/cms/sanityClient';
+/* eslint-disable @typescript-eslint/no-var-requires */
+// Note: CommonJS style is required for this file to work with Vercel edge function runtime
+const { createClient } = require('@supabase/supabase-js');
+const sanityClient = require('../../src/cms/sanityClient');
 
-export default async function handler(req: VercelRequest, res: VercelResponse) {
+module.exports.config = {
+  runtime: 'nodejs18.x', // Force Node.js runtime instead of Edge
+};
+
+module.exports = async function handler(req: any, res: any) {
     if (req.method !== 'POST') {
         return res.status(405).json({ error: 'Method not allowed' });
     }
@@ -80,6 +84,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             
             if (event?.confirmationMailSubject && event?.confirmationMailBody) {
                 // Send confirmation emails
+                const { sendConfirmationEmails } = await import('../../src/util/mail');
                 await sendConfirmationEmails(
                     attendee,
                     {
