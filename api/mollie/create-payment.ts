@@ -1,5 +1,8 @@
-import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { createMollieClient, type MollieClient } from '@mollie/api-client';
+const { createMollieClient } = require('@mollie/api-client');
+
+module.exports.config = {
+  runtime: 'nodejs18.x', // Force Node.js runtime instead of Edge
+};
 
 interface CreatePaymentRequest {
     amount: number;
@@ -15,7 +18,7 @@ interface CreatePaymentRequest {
     };
 }
 
-export default async function handler(req: VercelRequest, res: VercelResponse) {
+module.exports = async function handler(req: any, res: any) {
     if (req.method !== 'POST') {
         return res.status(405).json({ error: 'Method not allowed' });
     }
@@ -37,7 +40,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         }
         
         console.log("Creating Mollie client with API key:", mollieApiKey ? "Present" : "Missing");
-        const mollieClient: MollieClient = createMollieClient({ apiKey: mollieApiKey });
+        const mollieClient = createMollieClient({ apiKey: mollieApiKey });
 
         paymentParams = {
             amount: {
