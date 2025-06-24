@@ -7,11 +7,12 @@ import { createServerClient } from "supabase-auth-helpers-qwik";
 import { normalizeEvent } from "~/util/normalizing";
 import sanityClient from "~/cms/sanityClient";
 import { sendConfirmationEmails } from "~/util/mail";
+import { createMolliePayment } from "~/services/mollie";
 
 // TODO confirmation mail (pending data from frank), then mollie
 
 export const useRouteInfo = routeLoader$(async (requestEvent: RequestEventLoader) => {
-    const [event] = await sanityClient.fetch(`*[_type == "event" && slug.current == "${requestEvent.params.slug}"]{..., "imageUrl": image.asset->url,"imageRef": image.asset._ref, linkedProjects[]->{name, slug, hexColor}}`);
+    const [event] = await sanityClient.fetch(`*[_type == "event" && slug.current == "${requestEvent.params.slug}"]{..., "imageUrl": image.asset->url,"imageRef": image.asset._ref, linkedProjects[]->{name, slug, hexColor}, subscriptionIsPaid, subscriptionPrice}`);
     let isFull;
     if (event?.slug && event.subscribable) {
         const supabaseClient = createServerClient(
@@ -43,26 +44,74 @@ export const useSubscribe = routeAction$(
             requestEvent.env.get("SUPABASE_ANON_KEY")!,
             requestEvent
         );
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        
         try {
+            // Fetch event details to check if it's a paid event
+            const [event] = await sanityClient.fetch(
+                `*[_type == "event" && slug.current == "${data.eventSlug}"]{subscriptionIsPaid, subscriptionPrice, title}`
+            );
+            
+            const isPaidEvent = event?.subscriptionIsPaid && event?.subscriptionPrice > 0;
+            
+            // Insert attendee with appropriate payment status
             const { data: supabaseResponseData, error } = await supabaseClient.from("attendees")
                 .insert({
                     event_slug: data.eventSlug,
                     first_name: data.firstName,
                     last_name: data.lastName,
                     email: data.email,
+                    payment_status: isPaidEvent ? 'pending_payment' : 'confirmed',
                 })
                 .select()
                 .single();
-            console.log("DATA!", supabaseResponseData);
-            let success;
+                
             if (error) {
                 console.error("error", error);
-                success = false;
-            } else if (!(supabaseResponseData.id)) {
+                return { success: false, error };
+            }
+            
+            if (!supabaseResponseData.id) {
                 console.log("no id in response data, considering it an error");
-                success = false;
+                return { success: false };
+            }
+            
+            if (isPaidEvent) {
+                // Create Mollie payment
+                const mollieApiKey = requestEvent.env.get("MOLLIE_API_KEY");
+                const publicAppUrl = requestEvent.env.get("PUBLIC_APP_URL") || requestEvent.url.origin;
+                const mollieWebhookUrl = requestEvent.env.get("MOLLIE_WEBHOOK_URL") || `${publicAppUrl}/webhook/mollie`;
+                
+                if (!mollieApiKey) {
+                    console.error("MOLLIE_API_KEY not configured");
+                    return { success: false, error: "Payment configuration error" };
+                }
+                
+                const payment = await createMolliePayment({
+                    amount: event.subscriptionPrice,
+                    description: `Inschrijving voor ${event.title}`,
+                    redirectUrl: `${publicAppUrl}/payment/status?attendeeId=${supabaseResponseData.id}`,
+                    webhookUrl: mollieWebhookUrl,
+                    metadata: {
+                        attendeeId: supabaseResponseData.id.toString(),
+                        eventSlug: data.eventSlug,
+                        firstName: data.firstName,
+                        lastName: data.lastName,
+                        email: data.email,
+                    }
+                }, mollieApiKey);
+                
+                // Update attendee with payment ID
+                await supabaseClient.from("attendees")
+                    .update({ payment_id: payment.id })
+                    .eq('id', supabaseResponseData.id);
+                
+                // Return payment URL for redirect
+                return {
+                    success: true,
+                    paymentUrl: payment.getCheckoutUrl(),
+                };
             } else {
+                // Free event - send confirmation immediately
                 await sendConfirmationEmails(
                     supabaseResponseData,
                     {
@@ -71,14 +120,12 @@ export const useSubscribe = routeAction$(
                     },
                     requestEvent.env.get("RESEND_API_KEY")!
                 );
-                success = true;
+                
+                return { success: true };
             }
-            return {
-                success,
-                error,
-            };
         } catch (e) {
             console.error("caught error", e);
+            return { success: false, error: e };
         }
     },
     zod$(

@@ -22,15 +22,27 @@ const SubscriptionForm = component$<Props>(({ event, subscribeAction }) => {
     const mathSolution = mathNumber1 + mathNumber2;
 
     useTask$(({ track }) => {
-        const success = track(() => subscribeAction.value?.success);
-        if (success && formRef.value) {
-            formRef.value.reset();
+        const actionValue = track(() => subscribeAction.value);
+        
+        if (actionValue?.success) {
+            if (actionValue.paymentUrl) {
+                // Redirect to Mollie payment page
+                window.location.href = actionValue.paymentUrl;
+            } else if (formRef.value) {
+                // Free event - just reset form
+                formRef.value.reset();
+            }
         }
     });
 
     return (
         <div class="flex flex-col gap-4 text-machh-primary">
             <h2>Schrijf je in voor "{event.title}"</h2>
+            {event.subscriptionIsPaid && event.subscriptionPrice && (
+                <div class="text-lg font-semibold">
+                    Prijs: €{event.subscriptionPrice.toFixed(2)}
+                </div>
+            )}
             <div class="flex flex-col gap-4 text-sm">
                 <Form action={subscribeAction} /* data={{ slug: event.slug }}*/ class="flex flex-col gap-2" ref={formRef}>
                     <div>
@@ -64,9 +76,15 @@ const SubscriptionForm = component$<Props>(({ event, subscribeAction }) => {
                         </div>
                     )}
                     {subscribeAction.value?.success ? (
-                        <div class="text-green-500 my-4">
-                            Je bent ingeschreven voor "{event.title}"!
-                        </div>
+                        subscribeAction.value.paymentUrl ? (
+                            <div class="text-blue-500 my-4">
+                                Je wordt doorgestuurd naar de betaalpagina...
+                            </div>
+                        ) : (
+                            <div class="text-green-500 my-4">
+                                Je bent ingeschreven voor "{event.title}"!
+                            </div>
+                        )
                     ) : (
                         <div class="flex justify-end">
                             <MachHButton type="submit">
