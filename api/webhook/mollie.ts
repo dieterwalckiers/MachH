@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 // Note: CommonJS style is required for this file to work with Vercel edge function runtime
 const { createClient } = require('@supabase/supabase-js');
-const sanityClient = require('../../src/cms/sanityClient');
 
 module.exports.config = {
   runtime: 'nodejs18.x', // Force Node.js runtime instead of Edge
@@ -78,6 +77,7 @@ module.exports = async function handler(req: any, res: any) {
             }
             
             // Fetch event details for confirmation email
+            const sanityClient = (await import('../../src/cms/sanityClient')).default;
             const [event] = await sanityClient.fetch(
                 `*[_type == "event" && slug.current == "${attendee.event_slug}"]{confirmationMailSubject, confirmationMailBody}`
             );
