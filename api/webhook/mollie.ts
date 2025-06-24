@@ -88,22 +88,44 @@ module.exports = async function handler(req: any, res: any) {
             }
             
             // Fetch event details for confirmation email
-            const sanityClient = (await import('../../src/cms/sanityClient')).default;
+            const { createClient: createSanityClient } = require('@sanity/client');
+            const sanityClient = createSanityClient({
+                projectId: 'x6sfouap',
+                dataset: 'production',
+                useCdn: true,
+                apiVersion: '2023-10-14',
+            });
+            
             const [event] = await sanityClient.fetch(
                 `*[_type == "event" && slug.current == "${attendee.event_slug}"]{confirmationMailSubject, confirmationMailBody}`
             );
             
             if (event?.confirmationMailSubject && event?.confirmationMailBody) {
-                // Send confirmation emails
-                const { sendConfirmationEmails } = await import('../../src/util/mail');
-                await sendConfirmationEmails(
-                    attendee,
-                    {
+                // Send confirmation emails directly
+                const { Resend } = require('resend');
+                const resend = new Resend(process.env.RESEND_API_KEY);
+                
+                // Send both internal and subscriber emails
+                await Promise.all([
+                    // Internal email
+                    resend.emails.send({
+                        from: "Mach-H <inschrijvingen@transactional.mach-h.be>",
+                        replyTo: "inschrijvingen@mach-h.be",
+                        to: "inschrijvingen@mach-h.be",
+                        subject: `Nieuwe inschrijving voor ${attendee.event_slug}`,
+                        html: `<div><p>Nieuwe inschrijving voor ${attendee.event_slug} van ${attendee.first_name} ${attendee.last_name} (${attendee.email})!</p><p>Bekijk alle inschrijvingen op supabase.com</p></div>`,
+                        text: `Nieuwe inschrijving voor ${attendee.event_slug} van ${attendee.first_name} ${attendee.last_name} (${attendee.email})! Bekijk alle inschrijvingen op supabase.com`,
+                    }),
+                    // Subscriber email
+                    resend.emails.send({
+                        from: "Mach-H <inschrijvingen@transactional.mach-h.be>",
+                        replyTo: "inschrijvingen@mach-h.be",
+                        to: attendee.email,
                         subject: event.confirmationMailSubject,
-                        body: event.confirmationMailBody,
-                    },
-                    process.env.RESEND_API_KEY!
-                );
+                        html: event.confirmationMailBody.replace(/(\r\n|\n|\r)/g, "<br>"),
+                        text: event.confirmationMailBody,
+                    })
+                ]);
             }
         } else if (payment.status === 'failed' || payment.status === 'canceled' || payment.status === 'expired') {
             updateData.payment_status = 'failed';
