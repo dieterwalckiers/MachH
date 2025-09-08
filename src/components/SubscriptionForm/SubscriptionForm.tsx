@@ -62,11 +62,6 @@ const SubscriptionForm = component$<Props>(({ event, subscribeAction }) => {
                             return;
                         }
                         isSubmitting.value = true;
-                        const btn = formRef.value?.querySelector('button[type="submit"]') as HTMLButtonElement | null;
-                        if (btn) {
-                            btn.disabled = true;
-                            btn.setAttribute('aria-busy', 'true');
-                        }
                     }}
                 >
                     <div>
@@ -116,10 +111,8 @@ const SubscriptionForm = component$<Props>(({ event, subscribeAction }) => {
                                 disabled={isSubmitting.value}
                                 aria-busy={isSubmitting.value}
                                 onClick$={(ev) => {
-                                    const btn = ev.currentTarget as HTMLButtonElement | null;
                                     if (isSubmitting.value) {
                                         ev.preventDefault();
-                                        if (btn) btn.disabled = true;
                                         return;
                                     }
                                     const formEl = formRef.value;
@@ -129,10 +122,6 @@ const SubscriptionForm = component$<Props>(({ event, subscribeAction }) => {
                                     }
                                     ev.preventDefault();
                                     isSubmitting.value = true;
-                                    if (btn) {
-                                        btn.disabled = true;
-                                        btn.setAttribute('aria-busy', 'true');
-                                    }
                                     formEl.requestSubmit();
                                 }}
                             >
