@@ -9,7 +9,7 @@ const MachHButton = component$<Props>(({ class: _class, ...props }) => {
         <button
             {...props}
             type={props.type || "button"}
-            class={`bg-machh-primary text-white px-4 py-2 uppercase cursor-pointer hover:bg-machh-primary-light transition-colors duration-300 ${_class}`}
+            class={`bg-machh-primary text-white px-4 py-2 uppercase cursor-pointer hover:bg-machh-primary-light transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed ${_class}`}
         >
             <Slot />
         </button >

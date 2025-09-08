@@ -14,6 +14,7 @@ interface Props {
 const SubscriptionForm = component$<Props>(({ event, subscribeAction }) => {
 
     const formRef = useSignal<HTMLFormElement>();
+    const isSubmitting = useSignal(false);
 
     const mathNumber1 = Math.floor(Math.random() * 10) + 1;
     const mathNumber2 = Math.floor(Math.random() * 10) + 1;
@@ -31,7 +32,12 @@ const SubscriptionForm = component$<Props>(({ event, subscribeAction }) => {
             } else if (formRef.value) {
                 // Free event - just reset form
                 formRef.value.reset();
+                isSubmitting.value = false;
             }
+        }
+
+        if (actionValue?.failed || actionValue?.error) {
+            isSubmitting.value = false;
         }
     });
 
@@ -44,7 +50,25 @@ const SubscriptionForm = component$<Props>(({ event, subscribeAction }) => {
                 </div>
             )}
             <div class="flex flex-col gap-4 text-sm">
-                <Form action={subscribeAction} /* data={{ slug: event.slug }}*/ class="flex flex-col gap-2" ref={formRef}>
+                <Form
+                    id="subscription-form"
+                    action={subscribeAction}
+                    /* data={{ slug: event.slug }}*/
+                    class="flex flex-col gap-2"
+                    ref={formRef}
+                    onSubmit$={(ev) => {
+                        if (isSubmitting.value) {
+                            ev.preventDefault();
+                            return;
+                        }
+                        isSubmitting.value = true;
+                        const btn = formRef.value?.querySelector('button[type="submit"]') as HTMLButtonElement | null;
+                        if (btn) {
+                            btn.disabled = true;
+                            btn.setAttribute('aria-busy', 'true');
+                        }
+                    }}
+                >
                     <div>
                         <label class="text-machh-primary">Voornaam</label>
                         <Input name="firstName" />
@@ -87,8 +111,32 @@ const SubscriptionForm = component$<Props>(({ event, subscribeAction }) => {
                         )
                     ) : (
                         <div class="flex justify-end">
-                            <MachHButton type="submit">
-                                Inschrijven
+                            <MachHButton
+                                type="submit"
+                                disabled={isSubmitting.value}
+                                aria-busy={isSubmitting.value}
+                                onClick$={(ev) => {
+                                    const btn = ev.currentTarget as HTMLButtonElement | null;
+                                    if (isSubmitting.value) {
+                                        ev.preventDefault();
+                                        if (btn) btn.disabled = true;
+                                        return;
+                                    }
+                                    const formEl = formRef.value;
+                                    if (!formEl) return;
+                                    if (!formEl.checkValidity()) {
+                                        return;
+                                    }
+                                    ev.preventDefault();
+                                    isSubmitting.value = true;
+                                    if (btn) {
+                                        btn.disabled = true;
+                                        btn.setAttribute('aria-busy', 'true');
+                                    }
+                                    formEl.requestSubmit();
+                                }}
+                            >
+                                {isSubmitting.value ? "Wordt geladen..." : "Inschrijven"}
                             </MachHButton>
                         </div>
                     )}

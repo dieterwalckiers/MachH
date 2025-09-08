@@ -1,12 +1,7 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
-// Note: CommonJS style is required for this file to work with Vercel edge function runtime
-const { createMollieClient } = require('@mollie/api-client');
+import type { RequestHandler } from "@builder.io/qwik-city";
+import { createMollieClient } from "@mollie/api-client";
 
-module.exports.config = {
-  runtime: 'nodejs18.x', // Force Node.js runtime instead of Edge
-};
-
-interface CreatePaymentRequest {
+export interface CreatePaymentRequest {
     amount: number;
     description: string;
     redirectUrl: string;
@@ -20,33 +15,29 @@ interface CreatePaymentRequest {
     };
 }
 
-module.exports = async function handler(req: any, res: any) {
-    if (req.method !== 'POST') {
-        return res.status(405).json({ error: 'Method not allowed' });
-    }
-    let body;
-    let paymentParams;
-
+export const onPost: RequestHandler = async ({ request, json, env }) => {
     try {
-        const mollieApiKey = process.env.MOLLIE_API_KEY;
+        const mollieApiKey = env.get("MOLLIE_API_KEY");
         if (!mollieApiKey) {
-            return res.status(500).json({ error: "Server configuration error" });
+            json(500, { error: "Server configuration error" });
+            return;
         }
 
-        body = req.body as CreatePaymentRequest;
+        const body = await request.json() as CreatePaymentRequest;
         
         // Validate required fields
-        if (!body || typeof body.amount !== 'number' || !body.description || !body.redirectUrl || !body.webhookUrl) {
+        if (!body || typeof body.amount !== "number" || !body.description || !body.redirectUrl || !body.webhookUrl) {
             console.error("Invalid request body:", body);
-            return res.status(400).json({ error: "Missing required fields" });
+            json(400, { error: "Missing required fields" });
+            return;
         }
         
         console.log("Creating Mollie client with API key:", mollieApiKey ? "Present" : "Missing");
         const mollieClient = createMollieClient({ apiKey: mollieApiKey });
 
-        paymentParams = {
+        const paymentParams = {
             amount: {
-                currency: 'EUR',
+                currency: "EUR",
                 value: body.amount.toFixed(2)
             },
             description: body.description,
@@ -58,7 +49,7 @@ module.exports = async function handler(req: any, res: any) {
         const payment = await mollieClient.payments.create(paymentParams);
 
         // Return serializable payment data
-        return res.status(200).json({
+        json(200, {
             id: payment.id,
             status: payment.status,
             amount: payment.amount,
@@ -70,8 +61,10 @@ module.exports = async function handler(req: any, res: any) {
 
     } catch (error) {
         console.error("Mollie payment creation error:", error);
-        console.error("Request body:", JSON.stringify(body, null, 2));
-        console.error("Payment params:", JSON.stringify(paymentParams, null, 2));
-        return res.status(500).json({ error: "Failed to create payment", details: error instanceof Error ? error.message : String(error) });
+        console.error("Request body:", await request.text().catch(() => "Unable to read body"));
+        json(500, { 
+            error: "Failed to create payment", 
+            details: error instanceof Error ? error.message : String(error) 
+        });
     }
-}
+};
