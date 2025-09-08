@@ -1,8 +1,20 @@
 import type { RequestHandler } from "@builder.io/qwik-city";
-import { createMollieClient } from "@mollie/api-client";
 
 export interface GetPaymentRequest {
     paymentId: string;
+}
+
+interface MolliePaymentResponse {
+    id: string;
+    status: string;
+    amount: {
+        currency: string;
+        value: string;
+    };
+    description: string;
+    metadata: any;
+    createdAt: string;
+    paidAt?: string;
 }
 
 export const onPost: RequestHandler = async ({ request, json, env }) => {
@@ -16,14 +28,29 @@ export const onPost: RequestHandler = async ({ request, json, env }) => {
         const body = await request.json() as GetPaymentRequest;
         
         // Validate required fields
-        if (!body || !body.paymentId) {
+        if (!body.paymentId) {
             console.error("Invalid request body:", body);
             json(400, { error: "Missing payment ID" });
             return;
         }
         
-        const mollieClient = createMollieClient({ apiKey: mollieApiKey });
-        const payment = await mollieClient.payments.get(body.paymentId);
+        // Use fetch directly instead of Mollie SDK
+        const response = await fetch(`https://api.mollie.com/v2/payments/${body.paymentId}`, {
+            method: "GET",
+            headers: {
+                "Authorization": `Bearer ${mollieApiKey}`,
+                "Content-Type": "application/json"
+            }
+        });
+
+        if (!response.ok) {
+            const errorData = await response.text();
+            console.error("Mollie API error:", errorData);
+            json(response.status, { error: "Payment retrieval failed", details: errorData });
+            return;
+        }
+
+        const payment: MolliePaymentResponse = await response.json();
 
         // Return serializable payment data
         json(200, {

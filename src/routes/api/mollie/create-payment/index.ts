@@ -1,5 +1,4 @@
 import type { RequestHandler } from "@builder.io/qwik-city";
-import { createMollieClient } from "@mollie/api-client";
 
 export interface CreatePaymentRequest {
     amount: number;
@@ -15,6 +14,23 @@ export interface CreatePaymentRequest {
     };
 }
 
+interface MolliePaymentResponse {
+    id: string;
+    status: string;
+    amount: {
+        currency: string;
+        value: string;
+    };
+    description: string;
+    metadata: any;
+    createdAt: string;
+    _links: {
+        checkout?: {
+            href: string;
+        };
+    };
+}
+
 export const onPost: RequestHandler = async ({ request, json, env }) => {
     try {
         const mollieApiKey = env.get("MOLLIE_API_KEY");
@@ -26,14 +42,13 @@ export const onPost: RequestHandler = async ({ request, json, env }) => {
         const body = await request.json() as CreatePaymentRequest;
         
         // Validate required fields
-        if (!body || typeof body.amount !== "number" || !body.description || !body.redirectUrl || !body.webhookUrl) {
+        if (typeof body.amount !== "number" || !body.description || !body.redirectUrl || !body.webhookUrl) {
             console.error("Invalid request body:", body);
             json(400, { error: "Missing required fields" });
             return;
         }
         
-        console.log("Creating Mollie client with API key:", mollieApiKey ? "Present" : "Missing");
-        const mollieClient = createMollieClient({ apiKey: mollieApiKey });
+        console.log("Creating payment with Mollie API");
 
         const paymentParams = {
             amount: {
@@ -46,7 +61,24 @@ export const onPost: RequestHandler = async ({ request, json, env }) => {
             metadata: body.metadata
         };
         
-        const payment = await mollieClient.payments.create(paymentParams);
+        // Use fetch directly instead of Mollie SDK
+        const response = await fetch("https://api.mollie.com/v2/payments", {
+            method: "POST",
+            headers: {
+                "Authorization": `Bearer ${mollieApiKey}`,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(paymentParams)
+        });
+
+        if (!response.ok) {
+            const errorData = await response.text();
+            console.error("Mollie API error:", errorData);
+            json(response.status, { error: "Payment creation failed", details: errorData });
+            return;
+        }
+
+        const payment: MolliePaymentResponse = await response.json();
 
         // Return serializable payment data
         json(200, {
@@ -55,7 +87,7 @@ export const onPost: RequestHandler = async ({ request, json, env }) => {
             amount: payment.amount,
             description: payment.description,
             metadata: payment.metadata,
-            checkoutUrl: payment.getCheckoutUrl(),
+            checkoutUrl: payment._links.checkout?.href,
             createdAt: payment.createdAt,
         });
 

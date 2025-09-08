@@ -52,7 +52,6 @@
     "vite-tsconfig-paths": "4.2.0"
   },
   "dependencies": {
-    "@mollie/api-client": "^3.7.0",
     "@portabletext/to-html": "^2.0.5",
     "@sanity/client": "^6.4.9",
     "@supabase/supabase-js": "^2.49.4",
