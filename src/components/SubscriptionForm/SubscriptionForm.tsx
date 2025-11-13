@@ -2,7 +2,7 @@ import { component$, useSignal, useTask$ } from "@builder.io/qwik";
 import type { ActionStore } from "@builder.io/qwik-city";
 import { Form } from "@builder.io/qwik-city";
 import type { Event } from "~/contract";
-import { Input } from "../ui";
+import { Input, Textarea } from "../ui";
 import MachHButton from "../shared/machhbutton";
 import { summarizeErrors } from "./helpers";
 
@@ -80,6 +80,12 @@ const SubscriptionForm = component$<Props>(({ event, subscribeAction }) => {
                         <label class="text-machh-primary">{mathQuestion}</label>
                         <Input name="mathQuestion" type="number" />
                     </div>
+                    {event.remarksCaption && (
+                        <div>
+                            <label class="text-machh-primary">{event.remarksCaption}</label>
+                            <Textarea name="remarks" rows={4} />
+                        </div>
+                    )}
                     <input type="hidden" name="mathSolution" value={mathSolution} />
                     <input type="hidden" name="eventSlug" value={event.slug} />
                     <input type="hidden" name="eventConfirmationMailSubject" value={event.confirmationMailSubject} />

@@ -19,6 +19,7 @@ export interface Event {
     isFull?: boolean;
     confirmationMailSubject?: string;
     confirmationMailBody?: string;
+    remarksCaption?: string;
 }
 
 export interface CallToAction {
@@ -82,6 +83,7 @@ export interface Attendee {
     lastName: string,
     email: string,
     eventSlug: string,
+    remarks?: string,
     paymentStatus?: 'pending_payment' | 'confirmed' | 'failed',
     paymentId?: string,
     paidAt?: Date,

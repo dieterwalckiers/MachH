@@ -60,6 +60,7 @@ export const useSubscribe = routeAction$(
                     first_name: data.firstName,
                     last_name: data.lastName,
                     email: data.email,
+                    remarks: data.remarks || null,
                     payment_status: isPaidEvent ? 'pending_payment' : 'confirmed',
                 })
                 .select()
@@ -110,6 +111,7 @@ export const useSubscribe = routeAction$(
                         firstName: data.firstName,
                         lastName: data.lastName,
                         email: data.email,
+                        remarks: data.remarks || "",
                     }
                 }, publicAppUrl);
                 
@@ -152,6 +154,7 @@ export const useSubscribe = routeAction$(
                 mathSolution: z.coerce.number(),
                 eventConfirmationMailSubject: z.string(),
                 eventConfirmationMailBody: z.string(),
+                remarks: z.string().optional(),
             }
         ).refine((data) => {
             return data.mathSolution === data.mathQuestion;
