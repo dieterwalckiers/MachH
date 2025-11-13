@@ -9,6 +9,7 @@ export interface CreatePaymentParams {
         firstName: string;
         lastName: string;
         email: string;
+        remarks?: string;
     };
 }
 

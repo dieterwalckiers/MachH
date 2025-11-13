@@ -11,6 +11,7 @@ export interface CreatePaymentRequest {
         firstName: string;
         lastName: string;
         email: string;
+        remarks?: string;
     };
 }
 
