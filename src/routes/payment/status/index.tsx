@@ -73,7 +73,53 @@ export const usePaymentStatus = routeLoader$(async (requestEvent: RequestEventLo
             
             attendee = attendeeData;
         }
-        
+
+        // Check if database is out of sync with Mollie (for when webhook hasn't arrived yet)
+        if (payment.status === "paid" && attendee.payment_status !== "confirmed") {
+            console.log("[PAYMENT STATUS PAGE] Database out of sync, updating now...");
+
+            // Update the database to match Mollie status
+            const { error: updateError } = await supabaseClient
+                .from("attendees")
+                .update({
+                    payment_status: "confirmed",
+                    paid_at: payment.paidAt || new Date().toISOString()
+                })
+                .eq("id", attendee.id);
+
+            if (updateError) {
+                console.error("[PAYMENT STATUS PAGE] Failed to sync status:", updateError);
+            } else {
+                console.log("[PAYMENT STATUS PAGE] Successfully synced payment status to confirmed");
+                attendee.payment_status = "confirmed"; // Update local object
+
+                // Send confirmation email if not already sent
+                try {
+                    const { sendConfirmationEmails } = await import("~/util/mail");
+                    const sanityClient = (await import("~/cms/sanityClient")).default;
+
+                    const [event] = await sanityClient.fetch(
+                        `*[_type == "event" && slug.current == "${attendee.event_slug}"]{confirmationMailSubject, confirmationMailBody}`
+                    );
+
+                    if (event?.confirmationMailSubject && event?.confirmationMailBody) {
+                        await sendConfirmationEmails(
+                            attendee,
+                            {
+                                subject: event.confirmationMailSubject,
+                                body: event.confirmationMailBody,
+                            },
+                            requestEvent.env.get("RESEND_API_KEY")!
+                        );
+                        console.log("[PAYMENT STATUS PAGE] Sent confirmation email");
+                    }
+                } catch (emailError) {
+                    console.error("[PAYMENT STATUS PAGE] Failed to send confirmation email:", emailError);
+                    // Don't fail the request if email fails
+                }
+            }
+        }
+
         // Extract only serializable data from payment object
         const paymentData = {
             id: payment.id,
@@ -98,7 +144,9 @@ export const usePaymentStatus = routeLoader$(async (requestEvent: RequestEventLo
     }
 });
 
+// Server function to check payment status (used by the polling mechanism)
 export const checkPaymentStatus = server$(async function(paymentId: string | null, attendeeId: string | null) {
+    const self = this; // Store context reference
     if (!paymentId && !attendeeId) {
         return { success: false, error: "No payment ID or attendee ID provided" };
     }
@@ -165,7 +213,53 @@ export const checkPaymentStatus = server$(async function(paymentId: string | nul
             
             attendee = attendeeData;
         }
-        
+
+        // Check if database is out of sync with Mollie (for when webhook hasn't arrived yet)
+        if (payment.status === "paid" && attendee.payment_status !== "confirmed") {
+            console.log("[PAYMENT STATUS PAGE] Database out of sync, updating now...");
+
+            // Update the database to match Mollie status
+            const { error: updateError } = await supabaseClient
+                .from("attendees")
+                .update({
+                    payment_status: "confirmed",
+                    paid_at: payment.paidAt || new Date().toISOString()
+                })
+                .eq("id", attendee.id);
+
+            if (updateError) {
+                console.error("[PAYMENT STATUS PAGE] Failed to sync status:", updateError);
+            } else {
+                console.log("[PAYMENT STATUS PAGE] Successfully synced payment status to confirmed");
+                attendee.payment_status = "confirmed"; // Update local object
+
+                // Send confirmation email if not already sent
+                try {
+                    const { sendConfirmationEmails } = await import("~/util/mail");
+                    const sanityClient = (await import("~/cms/sanityClient")).default;
+
+                    const [event] = await sanityClient.fetch(
+                        `*[_type == "event" && slug.current == "${attendee.event_slug}"]{confirmationMailSubject, confirmationMailBody}`
+                    );
+
+                    if (event?.confirmationMailSubject && event?.confirmationMailBody) {
+                        await sendConfirmationEmails(
+                            attendee,
+                            {
+                                subject: event.confirmationMailSubject,
+                                body: event.confirmationMailBody,
+                            },
+                            self.env.get("RESEND_API_KEY")!
+                        );
+                        console.log("[PAYMENT STATUS PAGE] Sent confirmation email");
+                    }
+                } catch (emailError) {
+                    console.error("[PAYMENT STATUS PAGE] Failed to send confirmation email:", emailError);
+                    // Don't fail the request if email fails
+                }
+            }
+        }
+
         // Extract only serializable data from payment object
         const paymentData = {
             id: payment.id,

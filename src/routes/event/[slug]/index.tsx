@@ -22,7 +22,8 @@ export const useRouteInfo = routeLoader$(async (requestEvent: RequestEventLoader
         const rs = await supabaseClient
             .from("attendees")
             .select("id", { count: "exact" })
-            .eq("event_slug", event.slug.current);
+            .eq("event_slug", event.slug.current)
+            .eq("payment_status", "confirmed");
         const { count } = rs;
         isFull = (count || 0) >= event!.subscriptionMaxParticipants;
     }
@@ -78,7 +79,17 @@ export const useSubscribe = routeAction$(
                 // Create Mollie payment
                 const mollieApiKey = requestEvent.env.get("MOLLIE_API_KEY");
                 const publicAppUrl = requestEvent.env.get("PUBLIC_APP_URL") || requestEvent.url.origin;
-                const mollieWebhookUrl = requestEvent.env.get("MOLLIE_WEBHOOK_URL") || `${publicAppUrl}/api/webhook/mollie`;
+
+                // Note: For mollie callback to work in local development, you need to use ngrok or set MOLLIE_WEBHOOK_URL explicitly
+                const mollieWebhookUrl = requestEvent.env.get("MOLLIE_WEBHOOK_URL") || `${publicAppUrl}/webhook/mollie`;
+
+                // Log webhook URL for debugging
+                console.log("[PAYMENT] Creating payment with webhook URL:", mollieWebhookUrl);
+
+                if (mollieWebhookUrl.includes("localhost") || mollieWebhookUrl.includes("127.0.0.1")) {
+                    console.warn("[PAYMENT] WARNING: Using localhost webhook URL - Mollie won't be able to reach this!");
+                    console.warn("[PAYMENT] Consider using ngrok or setting MOLLIE_WEBHOOK_URL env variable");
+                }
                 
                 if (!mollieApiKey) {
                     console.error("MOLLIE_API_KEY not configured");
