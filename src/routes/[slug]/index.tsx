@@ -13,7 +13,7 @@ import { MainContext } from "../layout";
 import HtmlBlock from "~/components/HtmlBlock/htmlblock";
 
 export const useProject = routeLoader$(async (requestEvent: RequestEventLoader) => {
-    const [project] = await sanityClient.fetch(`*[_type == "project" && slug.current == "${requestEvent.params.slug}"]{...,name,hexColor,"photoUrl": photo.asset->url,"photoRef": photo.asset._ref,description,"galleryPhotoUrls": gallery[].asset->url,"galleryPhotoRefs": gallery[].asset._ref}`);
+    const [project] = await sanityClient.fetch(`*[_type == "project" && slug.current == "${requestEvent.params.slug}"]{...,name,hexColor,"gridImageUrl": coalesce(gridImage.asset->url, photo.asset->url),"gridImageRef": coalesce(gridImage.asset._ref, photo.asset._ref),"detailImageUrl": detailImage.asset->url,"detailImageRef": detailImage.asset._ref,description,"galleryPhotoUrls": gallery[].asset->url,"galleryPhotoRefs": gallery[].asset._ref}`);
     return project && normalizeProject(project);
 })
 
@@ -35,7 +35,7 @@ const ProjectComponent = component$(() => {
             </div>
             <div class="textContainer w-full py-8 text-machh-primary text-justify">
                 <MachHImage
-                    image={project.image}
+                    image={project.detailImage ?? project.gridImage}
                     alt={`${project.name} main image`}
                     // eslint-disable-next-line qwik/no-react-props
                     className="float-left mr-8 mb-4"

@@ -10,7 +10,8 @@ const Footer = component$(() => {
       <div class="flex flex-col">
         <label class="font-semibold block mb-4">Contact</label>
         <label>mach-h vzw</label>
-        <label>eendrachtstraat 29</label>
+        <label>maatschappelijke zetel:</label>
+        <label>eendrachtstraat 2</label>
         <label class="block mb-2">9000 Gent</label>
         <Link href="mailto:hallo@mach-h.be" class="cursor-pointer">
           <div class="flex items-center">
@@ -19,7 +20,7 @@ const Footer = component$(() => {
             <label class="cursor-pointer">mach-h.be</label>
           </div>
         </Link>
-        <label>BTW: BE0777936832</label>
+        <label>Ondernemingsnummer: BE0777936832</label>
 
       </div>
       <div class="flex flex-col justify-between">

@@ -86,6 +86,18 @@ const SubscriptionForm = component$<Props>(({ event, subscribeAction }) => {
                             <Textarea name="remarks" rows={4} />
                         </div>
                     )}
+                    <div class="flex items-center gap-2 mt-2">
+                        <input
+                            type="checkbox"
+                            name="subscribeToNewsletter"
+                            id="subscribeToNewsletter"
+                            value="true"
+                            class="h-5 w-5 rounded border border-input accent-machh-primary cursor-pointer"
+                        />
+                        <label for="subscribeToNewsletter" class="text-machh-primary cursor-pointer">
+                            Schrijf me in voor de nieuwsbrief
+                        </label>
+                    </div>
                     <input type="hidden" name="mathSolution" value={mathSolution} />
                     <input type="hidden" name="eventSlug" value={event.slug} />
                     <input type="hidden" name="eventConfirmationMailSubject" value={event.confirmationMailSubject} />

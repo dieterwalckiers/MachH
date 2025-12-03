@@ -72,24 +72,33 @@ export function normalizePost(post: any, skipLinkedProjects = false): Post {
     }
 }
 
-export function normalizeProject(project: any): Project {
-    const image = project.photoUrl && {
-        url: project.photoUrl,
-        ...extractOrigDims(project.photoRef),
+export function normalizeProject(project: unknown): Project {
+    const p = project as Record<string, unknown>;
+    const gridImage = p.gridImageUrl && {
+        url: p.gridImageUrl as string,
+        ...extractOrigDims(p.gridImageRef as string),
     }
 
-    const galleryImages = (project.galleryPhotoUrls || []).map((url: string, i: number) => ({
+    const detailImage = p.detailImageUrl && {
+        url: p.detailImageUrl as string,
+        ...extractOrigDims(p.detailImageRef as string),
+    }
+
+    const galleryPhotoUrls = (p.galleryPhotoUrls || []) as string[];
+    const galleryPhotoRefs = (p.galleryPhotoRefs || []) as string[];
+    const galleryImages = galleryPhotoUrls.map((url: string, i: number) => ({
         url,
-        ...extractOrigDims(project.galleryPhotoRefs[i]),
+        ...extractOrigDims(galleryPhotoRefs[i]),
     }));
 
     return {
-        ...project,
-        image,
+        ...p,
+        gridImage,
+        detailImage,
         galleryImages,
-        slug: project.slug?.current,
-        descriptionHtml: toHTML(project.description),
-    }
+        slug: (p.slug as { current?: string })?.current,
+        descriptionHtml: toHTML(p.description as unknown[]),
+    } as Project;
 }
 
 function normalizePlainOldTitleAndBody<T extends PlainOldTitleAndBody>(thang: any): T {

@@ -62,6 +62,7 @@ export const useSubscribe = routeAction$(
                     email: data.email,
                     remarks: data.remarks || null,
                     payment_status: isPaidEvent ? 'pending_payment' : 'confirmed',
+                    subscribe_to_newsletter: data.subscribeToNewsletter === "true",
                 })
                 .select()
                 .single();
@@ -155,6 +156,7 @@ export const useSubscribe = routeAction$(
                 eventConfirmationMailSubject: z.string(),
                 eventConfirmationMailBody: z.string(),
                 remarks: z.string().optional(),
+                subscribeToNewsletter: z.string().optional(),
             }
         ).refine((data) => {
             return data.mathSolution === data.mathQuestion;
