@@ -44,7 +44,7 @@ const sendInternalEmail = server$(
         const response = await resend.emails.send({
             from: "Mach-H <inschrijvingen@transactional.mach-h.be>",
             replyTo: "inschrijvingen@mach-h.be",
-            to: "d.walckiers@protonmail.com",// "inschrijvingen@mach-h.be",
+            to: "inschrijvingen@mach-h.be",
             subject: `Nieuwe inschrijving voor ${data.event_slug}`,
             html: `<div><p>Nieuwe inschrijving voor ${data.event_slug} van ${data.first_name} ${data.last_name} (${data.email})!</p><p>Nieuwsbrief: ${newsletterText}</p><p>Bekijk alle inschrijvingen op supabase.com</p></div>`,
             text: `Nieuwe inschrijving voor ${data.event_slug} van ${data.first_name} ${data.last_name} (${data.email})! Nieuwsbrief: ${newsletterText}. Bekijk alle inschrijvingen op supabase.com`,
