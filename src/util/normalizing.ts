@@ -41,12 +41,19 @@ export function normalizeEvent(
         url: event.imageUrl,
         ...extractOrigDims(event.imageRef),
     };
+    const photoUrls = (event.photoUrls || []) as string[];
+    const photoRefs = (event.photoRefs || []) as string[];
+    const photos = photoUrls.map((url: string, i: number) => ({
+        url,
+        ...extractOrigDims(photoRefs[i]),
+    }));
     const jsDate = new Date(y, m - 1, d);
     const dayOfWeek = jsDate.toLocaleDateString('nl-NL', { weekday: 'short' });
     const month = jsDate.toLocaleDateString('nl-NL', { month: 'short' });
     return {
         ...event,
         image,
+        photos,
         date: `${d}/${m}/${y}`,
         dateNotation1: `${dayOfWeek} ${d} ${month}`.toUpperCase(),
         timeNotation1: event.time ? `${event.time}${event.endTime ? ` - ${event.endTime}` : ""}` : "",

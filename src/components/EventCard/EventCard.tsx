@@ -6,6 +6,7 @@ import type { ActionStore } from "@builder.io/qwik-city";
 import { Link, useNavigate } from "@builder.io/qwik-city";
 import MachHImage from "../MachHImage";
 import CallToActions from "../shared/calltoactions";
+import Gallery from "../Gallery/gallery";
 import HtmlBlock from "../HtmlBlock/htmlblock";
 import { Modal } from "../ui/modal/modal";
 import { buttonVariants } from "../ui";
@@ -88,6 +89,7 @@ const EventCard = component$<Props>(({ event, clickable, showDetail, noBottomBor
             {showDetail ? (
                 <div class="mt-8 md:pl-[5.5rem]">
                     {event.descriptionHtml && <HtmlBlock value={event.descriptionHtml} class="text-justify" />}
+                    {event.photos?.length ? <Gallery images={event.photos} /> : null}
                 </div>
             ) : null}
             <div class="flex ml-[4.5rem] mt-8 justify-between items-top">

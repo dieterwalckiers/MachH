@@ -9,7 +9,7 @@ import { MainContext } from "./layout";
 import { normalizeEvent } from "~/util/normalizing";
 
 export const useNextThreeEvents = routeLoader$(async () => {
-    const nextThreeEvents = await sanityClient.fetch('*[_type == "event" && date > now()]|order(date asc){date,time,place,price,title,slug,linkedProjects[]->{name, slug, hexColor}}[0..2]');
+    const nextThreeEvents = await sanityClient.fetch('*[_type == "event" && date >= now()]|order(date asc){date,time,place,price,title,slug,linkedProjects[]->{name, slug, hexColor}}[0..2]');
     return nextThreeEvents.map((e: any) => normalizeEvent(e)) as Event[];
 });
 

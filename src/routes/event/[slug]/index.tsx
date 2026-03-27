@@ -11,7 +11,7 @@ import { sendConfirmationEmails } from "~/util/mail";
 // TODO confirmation mail (pending data from frank), then mollie
 
 export const useRouteInfo = routeLoader$(async (requestEvent: RequestEventLoader) => {
-    const [event] = await sanityClient.fetch(`*[_type == "event" && slug.current == "${requestEvent.params.slug}"]{..., "imageUrl": image.asset->url,"imageRef": image.asset._ref, linkedProjects[]->{name, slug, hexColor}, subscriptionIsPaid, subscriptionPrice}`);
+    const [event] = await sanityClient.fetch(`*[_type == "event" && slug.current == "${requestEvent.params.slug}"]{..., "imageUrl": image.asset->url,"imageRef": image.asset._ref, "photoUrls": photos[].asset->url, "photoRefs": photos[].asset._ref, linkedProjects[]->{name, slug, hexColor}, subscriptionIsPaid, subscriptionPrice}`);
     let isFull;
     if (event?.slug && event.subscribable) {
         const supabaseClient = createServerClient(

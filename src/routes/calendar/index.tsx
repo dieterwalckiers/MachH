@@ -16,14 +16,16 @@ export const useEvents = routeLoader$(async (requestEvent: RequestEventLoader) =
   const to = parseInt(requestEvent.query.get("to") ?? `${EVENTS_ON_PAGE}`);
   const fromMinusOne = Math.max(from - 1, 0);
   const toPlusOne = to + 1;
-  const rawEvents = await sanityClient.fetch(`*[_type == "event" && date > now()]|order(date asc){date,time,endTime,place,price,title,slug,"imageUrl": image.asset->url,"imageRef": image.asset._ref,linkedProjects[]->{name, slug, hexColor}}[${fromMinusOne}...${toPlusOne}]`);
+  const rawEvents = await sanityClient.fetch(`*[_type == "event" && date >= now()]|order(date asc){date,time,endTime,place,price,title,slug,"imageUrl": image.asset->url,"imageRef": image.asset._ref,linkedProjects[]->{name, slug, hexColor}}[${fromMinusOne}...${toPlusOne}]`);
   const events = rawEvents.map((e: any) => normalizeEvent(e)) as Event[];
+  const hasPrevPeek = from !== fromMinusOne;
+  const forwardCount = events.length - (hasPrevPeek ? 1 : 0);
   let moreFurther;
-  if (events.length > (to - from)) {
+  if (forwardCount > (to - from)) {
     moreFurther = true;
     events.pop();
   }
-  if (from !== fromMinusOne) {
+  if (hasPrevPeek) {
     events.shift();
   }
   return {

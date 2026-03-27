@@ -10,6 +10,7 @@ export interface Event {
     slug: string;
     linkedProjects?: Project[],
     image?: Image,
+    photos?: Image[],
     descriptionHtml?: string;
     callToActions?: CallToAction[];
     subscribable?: boolean;
